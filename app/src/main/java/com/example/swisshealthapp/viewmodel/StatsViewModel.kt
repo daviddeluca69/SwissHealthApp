@@ -4,51 +4,42 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.swisshealthapp.data.GoalsRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import java.time.format.DateTimeFormatter
 
 class StatsViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = GoalsRepository(application)
-    private val defaultGoals = DailyGoalsViewModel(application).getGoalsForDate(LocalDate.now())
     
     private val _dailyPoints = MutableStateFlow<List<Int>>(emptyList())
     val dailyPoints: StateFlow<List<Int>> = _dailyPoints
 
-    private var updateJob: Job? = null
-
     init {
-        startPeriodicUpdate()
+        loadLastTenDaysPoints()
     }
 
-    private fun startPeriodicUpdate() {
-        updateJob?.cancel()
-        updateJob = viewModelScope.launch {
-            while(true) {
-                loadLastTenDaysPoints()
-                delay(1000) // Mettre à jour toutes les secondes
+    private fun loadLastTenDaysPoints() {
+        viewModelScope.launch {
+            val today = LocalDate.now()
+            val points = mutableListOf<Int>()
+            val goals = repository.goals.first()
+            
+            for (i in 9 downTo 0) {
+                val date = today.minusDays(i.toLong())
+                val dateStr = date.format(DateTimeFormatter.ISO_DATE)
+                var totalPoints = 0
+                
+                for (goal in goals) {
+                    val isCompleted = repository.getGoalCompletionStatus(goal.id, dateStr).first()
+                    if (isCompleted) {
+                        totalPoints += goal.points
+                    }
+                }
+                points.add(totalPoints)
             }
+            
+            _dailyPoints.value = points
         }
-    }
-
-    private suspend fun loadLastTenDaysPoints() {
-        val today = LocalDate.now()
-        val points = mutableListOf<Int>()
-        
-        for (i in 9 downTo 0) {
-            val date = today.minusDays(i.toLong())
-            val dailyPoints = repository.getDailyPoints(date, defaultGoals)
-            points.add(dailyPoints)
-        }
-        
-        _dailyPoints.value = points
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        updateJob?.cancel()
     }
 } 

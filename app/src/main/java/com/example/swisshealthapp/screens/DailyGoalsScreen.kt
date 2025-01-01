@@ -30,17 +30,17 @@ fun DailyGoalsScreen(
     var selectedGoal by remember { mutableStateOf<Goal?>(null) }
     val pagerState = rememberPagerState(
         initialPage = 30,
-        pageCount = { 61 } // 30 jours avant et 30 jours après
+        pageCount = { 61 }
     )
     val coroutineScope = rememberCoroutineScope()
     val today = remember { LocalDate.now() }
+    val goalsMap by viewModel.goalsWithStatus.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Bouton pour revenir à aujourd'hui
         Button(
             onClick = {
                 coroutineScope.launch {
@@ -59,17 +59,21 @@ fun DailyGoalsScreen(
             modifier = Modifier.fillMaxSize()
         ) { page ->
             val date = today.plusDays(page.toLong() - 30)
-            val goalsForDate = viewModel.getGoalsForDate(date)
+            val goals = goalsMap[date] ?: emptyList()
+            
+            LaunchedEffect(date) {
+                viewModel.setCurrentDate(date)
+            }
+
             DailyContent(
                 date = date,
-                goals = goalsForDate,
+                goals = goals,
                 onGoalClick = { viewModel.toggleGoalCompletion(it, date) },
                 onGoalDetails = { selectedGoal = it }
             )
         }
     }
 
-    // Boîte de dialogue des détails
     selectedGoal?.let { goal ->
         GoalDetailsDialog(
             goal = goal,
