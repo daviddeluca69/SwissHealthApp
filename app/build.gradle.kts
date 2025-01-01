@@ -60,4 +60,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.datastore.preferences)
+    implementation("com.patrykandpatrick.vico:compose:1.12.0")
+    implementation("com.patrykandpatrick.vico:compose-m3:1.12.0")
 }

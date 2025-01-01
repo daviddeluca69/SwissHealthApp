@@ -25,6 +25,7 @@ import com.example.swisshealthapp.screens.CalendarScreen
 import com.example.swisshealthapp.screens.DailyGoalsScreen
 import com.example.swisshealthapp.screens.LanguageScreen
 import com.example.swisshealthapp.screens.SettingsScreen
+import com.example.swisshealthapp.screens.StatsScreen
 import com.example.swisshealthapp.ui.theme.SwissHealthAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -79,7 +80,7 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.DAILY_GOALS.name) { DailyGoalsScreen() }
-            composable(Screen.CALENDAR.name) { CalendarScreen() }
+            composable(Screen.STATS.name) { StatsScreen() }
             composable(Screen.SETTINGS.name) { SettingsScreen() }
             composable(Screen.LANGUAGE.name) { LanguageScreen() }
         }
@@ -89,7 +90,7 @@ fun MainScreen() {
 fun getIconForScreen(screen: Screen): Int {
     return when (screen) {
         Screen.DAILY_GOALS -> R.drawable.ic_goals
-        Screen.CALENDAR -> R.drawable.ic_calendar
+        Screen.STATS -> R.drawable.ic_stats
         Screen.SETTINGS -> R.drawable.ic_settings
         Screen.LANGUAGE -> R.drawable.ic_language
     }
@@ -98,7 +99,7 @@ fun getIconForScreen(screen: Screen): Int {
 fun getLabelForScreen(screen: Screen): String {
     return when (screen) {
         Screen.DAILY_GOALS -> "Objectifs"
-        Screen.CALENDAR -> "Calendrier"
+        Screen.STATS -> "Statistiques"
         Screen.SETTINGS -> "Paramètres"
         Screen.LANGUAGE -> "Langue"
     }

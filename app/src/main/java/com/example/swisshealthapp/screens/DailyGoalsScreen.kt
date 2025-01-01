@@ -1,5 +1,8 @@
 package com.example.swisshealthapp.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,33 +20,52 @@ import com.example.swisshealthapp.viewmodel.DailyGoalsViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DailyGoalsScreen(
     viewModel: DailyGoalsViewModel = viewModel()
 ) {
     var selectedGoal by remember { mutableStateOf<Goal?>(null) }
+    val pagerState = rememberPagerState(
+        initialPage = 30,
+        pageCount = { 61 } // 30 jours avant et 30 jours après
+    )
+    val coroutineScope = rememberCoroutineScope()
+    val today = remember { LocalDate.now() }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        DailyHeader(goals = viewModel.goals)
-        
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        // Bouton pour revenir à aujourd'hui
+        Button(
+            onClick = {
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(30)
+                }
+            },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            items(viewModel.goals) { goal ->
-                GoalItem(
-                    goal = goal,
-                    onGoalClick = { viewModel.toggleGoalCompletion(goal.id) },
-                    onGoalDetails = { selectedGoal = goal }
-                )
-            }
+            Text("Aujourd'hui")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+        ) { page ->
+            val date = today.plusDays(page.toLong() - 30)
+            val goalsForDate = viewModel.getGoalsForDate(date)
+            DailyContent(
+                date = date,
+                goals = goalsForDate,
+                onGoalClick = { viewModel.toggleGoalCompletion(it, date) },
+                onGoalDetails = { selectedGoal = it }
+            )
         }
     }
 
@@ -52,6 +74,70 @@ fun DailyGoalsScreen(
         GoalDetailsDialog(
             goal = goal,
             onDismiss = { selectedGoal = null }
+        )
+    }
+}
+
+@Composable
+fun DailyContent(
+    date: LocalDate,
+    goals: List<Goal>,
+    onGoalClick: (Int) -> Unit,
+    onGoalDetails: (Goal) -> Unit
+) {
+    Column {
+        DailyHeader(date = date, goals = goals)
+        
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(goals) { goal ->
+                GoalItem(
+                    goal = goal,
+                    onGoalClick = { onGoalClick(goal.id) },
+                    onGoalDetails = { onGoalDetails(goal) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun DailyHeader(
+    date: LocalDate,
+    goals: List<Goal>
+) {
+    val totalPoints = goals.filter { it.isCompleted }.sumOf { it.points }
+    val maxPoints = goals.sumOf { it.points }
+    val formatter = remember { DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.FRENCH) }
+    
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Text(
+            text = date.format(formatter),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+        
+        Spacer(modifier = Modifier.height(4.dp))
+        
+        Text(
+            text = "Points: $totalPoints / $maxPoints",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+        
+        LinearProgressIndicator(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            progress = { if (maxPoints > 0) totalPoints.toFloat() / maxPoints else 0f }
         )
     }
 }
@@ -141,40 +227,5 @@ fun GoalItem(
                 onCheckedChange = { onGoalClick() }
             )
         }
-    }
-}
-
-@Composable
-fun DailyHeader(goals: List<Goal>) {
-    val totalPoints = goals.filter { it.isCompleted }.sumOf { it.points }
-    val maxPoints = goals.sumOf { it.points }
-    val today = remember { LocalDate.now() }
-    val formatter = remember { DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.FRENCH) }
-    
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    ) {
-        Text(
-            text = today.format(formatter),
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
-        )
-        
-        Spacer(modifier = Modifier.height(4.dp))
-        
-        Text(
-            text = "Points: $totalPoints / $maxPoints",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary
-        )
-        
-        LinearProgressIndicator(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            progress = { if (maxPoints > 0) totalPoints.toFloat() / maxPoints else 0f }
-        )
     }
 } 

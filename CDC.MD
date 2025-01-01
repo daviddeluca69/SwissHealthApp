@@ -11,9 +11,11 @@ Créer l'application de santé nommée SwissHealthApp pour mobile android
 - [ L'application sauvegarde automatiquement l'ensemble des objectifs quand une case à cocher est modifiée ]
 - [ En guise de titre de cette liste : date du jour et nombre de points total du jour ]
 - [ L'utilisateur peut cliquer sur un objectif pour afficher les détails de l'objectif ]
+- [ L'utilisateur peut glisser sur la gauche ou la droite pour sélectionner date passée puis revenir à la date du jour ]
 
-## Onglet numéro 2 : accés au calendrier permettant de consulter les objectifs passés
-- [ L'utilisateur peut selectionner une date passée dans un calendrier pour consulter ses objectifs passés ]
+
+## Onglet numéro 2 : accés statistiques
+- [ L'utilisateur peut consulter un graphique de ses points par jour sur les 100 derniers jours ]
 
 ## Onglet numéro 3 : paramètres de l'application
 - [ L'utilisateur peut créer des objectifs ou modifier des objectifs existants ]

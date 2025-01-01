@@ -2,7 +2,7 @@ package com.example.swisshealthapp.navigation
 
 enum class Screen {
     DAILY_GOALS,
-    CALENDAR,
+    STATS,
     SETTINGS,
     LANGUAGE;
 
@@ -10,7 +10,7 @@ enum class Screen {
         fun fromRoute(route: String?): Screen =
             when (route?.substringBefore("/")) {
                 DAILY_GOALS.name -> DAILY_GOALS
-                CALENDAR.name -> CALENDAR
+                STATS.name -> STATS
                 SETTINGS.name -> SETTINGS
                 LANGUAGE.name -> LANGUAGE
                 null -> DAILY_GOALS
