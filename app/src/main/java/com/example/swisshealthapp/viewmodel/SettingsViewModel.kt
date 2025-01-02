@@ -62,4 +62,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             repository.saveGoals(currentGoals.filter { it.id != id })
         }
     }
+
+    fun clearAllData() {
+        viewModelScope.launch {
+            repository.clearAllData()
+        }
+    }
 } 

@@ -24,50 +24,51 @@ fun SettingsScreen(
     var showGoalDialog by remember { mutableStateOf(false) }
     var editingGoal by remember { mutableStateOf<Goal?>(null) }
     var goalToDelete by remember { mutableStateOf<Goal?>(null) }
+    var showResetConfirmation by remember { mutableStateOf(false) }
     val goals by viewModel.goals.collectAsState(initial = emptyList())
     
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = "Paramètres",
-            style = MaterialTheme.typography.titleLarge
-        )
-        
-        Spacer(modifier = Modifier.height(24.dp))
+        item {
+            Text(
+                text = "Paramètres",
+                style = MaterialTheme.typography.titleLarge
+            )
+            
+            Spacer(modifier = Modifier.height(24.dp))
 
-        // Gestion des objectifs
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
+            // Gestion des objectifs
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    modifier = Modifier.padding(16.dp)
                 ) {
-                    Text(
-                        text = "Gestion des objectifs",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    IconButton(onClick = { 
-                        editingGoal = null
-                        showGoalDialog = true 
-                    }) {
-                        Icon(Icons.Default.Add, "Ajouter un objectif")
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Gestion des objectifs",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        IconButton(onClick = { 
+                            editingGoal = null
+                            showGoalDialog = true 
+                        }) {
+                            Icon(Icons.Default.Add, "Ajouter un objectif")
+                        }
                     }
-                }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                LazyColumn {
-                    items(goals) { goal ->
+                    goals.forEach { goal ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -102,14 +103,56 @@ fun SettingsScreen(
                                 }
                             }
                         }
-                        HorizontalDivider()
+                        if (goal != goals.last()) {
+                            HorizontalDivider()
+                        }
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Section Réinitialisation
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        text = "Réinitialisation",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    Text(
+                        text = "Attention : cette action effacera toutes les données de l'application et restaurera les objectifs par défaut.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                    
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
+                    Button(
+                        onClick = { showResetConfirmation = true },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Réinitialiser l'application")
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 
-    // Boîte de dialogue de confirmation de suppression
+    // Boîte de dialogue de confirmation de suppression d'un objectif
     goalToDelete?.let { goal ->
         AlertDialog(
             onDismissRequest = { goalToDelete = null },
@@ -136,7 +179,38 @@ fun SettingsScreen(
         )
     }
 
-    // Boîte de dialogue d'édition existante
+    // Boîte de dialogue de confirmation de réinitialisation
+    if (showResetConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showResetConfirmation = false },
+            title = { Text("Réinitialiser l'application") },
+            text = { 
+                Text(
+                    "Êtes-vous sûr de vouloir réinitialiser l'application ? Cette action effacera toutes vos données et ne pourra pas être annulée."
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.clearAllData()
+                        showResetConfirmation = false
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text("Réinitialiser")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetConfirmation = false }) {
+                    Text("Annuler")
+                }
+            }
+        )
+    }
+
+    // Boîte de dialogue d'édition d'objectif
     if (showGoalDialog) {
         GoalDialog(
             goal = editingGoal,
