@@ -14,6 +14,7 @@ import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.example.swisshealthapp.viewmodel.StatsViewModel
+import com.example.swisshealthapp.ui.components.LocalizedText
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -31,8 +32,8 @@ fun StatsScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = "Points des 10 derniers jours",
+        LocalizedText(
+            text = "last_ten_days_points",
             style = MaterialTheme.typography.titleLarge
         )
         
@@ -52,15 +53,15 @@ fun StatsScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     StatItem(
-                        title = "Aujourd'hui",
+                        title = "today_stats",
                         value = "${pointsData.last()} pts"
                     )
                     StatItem(
-                        title = "Moyenne",
+                        title = "average",
                         value = "${pointsData.average().toInt()} pts"
                     )
                     StatItem(
-                        title = "Maximum",
+                        title = "maximum",
                         value = "${pointsData.maxOrNull() ?: 0} pts"
                     )
                 }
@@ -87,7 +88,7 @@ fun StatsScreen(
                         .fillMaxWidth()
                         .padding(16.dp),
                     startAxis = rememberStartAxis(
-                        title = "Points",
+                        title = "points",
                         valueFormatter = { value, _ -> 
                             if (value >= 0 && value == value.toInt().toFloat()) {
                                 value.toInt().toString()
@@ -123,7 +124,7 @@ fun StatItem(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
+        LocalizedText(
             text = title,
             style = MaterialTheme.typography.bodyMedium
         )

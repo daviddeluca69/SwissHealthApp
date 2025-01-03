@@ -1,11 +1,8 @@
 package com.example.swisshealthapp.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
@@ -14,91 +11,86 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.swisshealthapp.viewmodel.SettingsViewModel
 import com.example.swisshealthapp.model.Goal
+import com.example.swisshealthapp.viewmodel.SettingsViewModel
+import com.example.swisshealthapp.ui.components.LocalizedText
+import com.example.swisshealthapp.ui.components.LocalizedTextWithParams
 
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = viewModel()
 ) {
-    var showGoalDialog by remember { mutableStateOf(false) }
-    var editingGoal by remember { mutableStateOf<Goal?>(null) }
-    var goalToDelete by remember { mutableStateOf<Goal?>(null) }
-    var showResetConfirmation by remember { mutableStateOf(false) }
-    val goals by viewModel.goals.collectAsState(initial = emptyList())
+    var showDeleteDialog by remember { mutableStateOf<Goal?>(null) }
+    var showResetDialog by remember { mutableStateOf(false) }
+    var showAddEditDialog by remember { mutableStateOf<Goal?>(null) }
     
+    val goals by viewModel.goals.collectAsState(initial = emptyList())
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            Text(
-                text = "Paramètres",
-                style = MaterialTheme.typography.titleLarge
+            LocalizedText(
+                text = "settings",
+                style = MaterialTheme.typography.headlineMedium
             )
-            
-            Spacer(modifier = Modifier.height(24.dp))
+        }
 
-            // Gestion des objectifs
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
+        item {
+            Card {
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    LocalizedText(
+                        text = "goals_management",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
+                    Button(
+                        onClick = { showAddEditDialog = Goal(0, "", 0, "") },
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(
-                            text = "Gestion des objectifs",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        IconButton(onClick = { 
-                            editingGoal = null
-                            showGoalDialog = true 
-                        }) {
-                            Icon(Icons.Default.Add, "Ajouter un objectif")
-                        }
+                        LocalizedText(text = "add_goal")
                     }
-
+                    
                     Spacer(modifier = Modifier.height(8.dp))
-
+                    
                     goals.forEach { goal ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 8.dp),
+                                .padding(vertical = 4.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = goal.title,
-                                    style = MaterialTheme.typography.bodyLarge
+                                    style = MaterialTheme.typography.titleMedium
                                 )
                                 Text(
                                     text = "${goal.points} points",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.primary
+                                    style = MaterialTheme.typography.bodyMedium
                                 )
                             }
                             Row {
-                                IconButton(onClick = {
-                                    editingGoal = goal
-                                    showGoalDialog = true
-                                }) {
-                                    Icon(Icons.Default.Edit, "Modifier")
-                                }
-                                IconButton(onClick = { goalToDelete = goal }) {
+                                IconButton(onClick = { showAddEditDialog = goal }) {
                                     Icon(
-                                        Icons.Default.Delete,
-                                        contentDescription = "Supprimer",
-                                        tint = MaterialTheme.colorScheme.error
+                                        imageVector = Icons.Default.Edit,
+                                        contentDescription = "Modifier l'objectif"
+                                    )
+                                }
+                                IconButton(onClick = { showDeleteDialog = goal }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Supprimer l'objectif"
                                     )
                                 }
                             }
@@ -109,186 +101,163 @@ fun SettingsScreen(
                     }
                 }
             }
+        }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Section Réinitialisation
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
+        item {
+            Card {
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 ) {
-                    Text(
-                        text = "Réinitialisation",
-                        style = MaterialTheme.typography.titleMedium
+                    LocalizedText(
+                        text = "reset_section",
+                        style = MaterialTheme.typography.titleLarge
                     )
                     
                     Spacer(modifier = Modifier.height(8.dp))
                     
-                    Text(
-                        text = "Attention : cette action effacera toutes les données de l'application et restaurera les objectifs par défaut.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
+                    LocalizedText(
+                        text = "reset_warning",
+                        style = MaterialTheme.typography.bodyMedium
                     )
                     
                     Spacer(modifier = Modifier.height(16.dp))
                     
                     Button(
-                        onClick = { showResetConfirmation = true },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error
-                        ),
+                        onClick = { showResetDialog = true },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Réinitialiser l'application")
+                        LocalizedText(text = "reset_app")
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 
-    // Boîte de dialogue de confirmation de suppression d'un objectif
-    goalToDelete?.let { goal ->
+    // Dialogue de suppression
+    if (showDeleteDialog != null) {
         AlertDialog(
-            onDismissRequest = { goalToDelete = null },
-            title = { Text("Supprimer l'objectif") },
-            text = { Text("Êtes-vous sûr de vouloir supprimer l'objectif \"${goal.title}\" ?") },
+            onDismissRequest = { showDeleteDialog = null },
+            title = { LocalizedText(text = "delete_goal") },
+            text = { 
+                LocalizedTextWithParams(
+                    text = "delete_goal_confirmation",
+                    params = arrayOf(showDeleteDialog!!.title)
+                )
+            },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        viewModel.deleteGoal(goal.id)
-                        goalToDelete = null
-                    },
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
-                    )
+                        showDeleteDialog?.let { goal ->
+                            viewModel.deleteGoal(goal.id)
+                        }
+                        showDeleteDialog = null
+                    }
                 ) {
-                    Text("Supprimer")
+                    LocalizedText(text = "confirm_delete")
                 }
             },
             dismissButton = {
-                TextButton(onClick = { goalToDelete = null }) {
-                    Text("Annuler")
+                TextButton(onClick = { showDeleteDialog = null }) {
+                    LocalizedText(text = "cancel")
                 }
             }
         )
     }
 
-    // Boîte de dialogue de confirmation de réinitialisation
-    if (showResetConfirmation) {
+    // Dialogue de réinitialisation
+    if (showResetDialog) {
         AlertDialog(
-            onDismissRequest = { showResetConfirmation = false },
-            title = { Text("Réinitialiser l'application") },
-            text = { 
-                Text(
-                    "Êtes-vous sûr de vouloir réinitialiser l'application ? Cette action effacera toutes vos données et ne pourra pas être annulée."
-                )
-            },
+            onDismissRequest = { showResetDialog = false },
+            title = { LocalizedText(text = "reset_app") },
+            text = { LocalizedText(text = "reset_confirmation") },
             confirmButton = {
                 TextButton(
                     onClick = {
                         viewModel.clearAllData()
-                        showResetConfirmation = false
-                    },
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
-                    )
+                        showResetDialog = false
+                    }
                 ) {
-                    Text("Réinitialiser")
+                    LocalizedText(text = "confirm_reset")
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showResetConfirmation = false }) {
-                    Text("Annuler")
+                TextButton(onClick = { showResetDialog = false }) {
+                    LocalizedText(text = "cancel")
                 }
             }
         )
     }
 
-    // Boîte de dialogue d'édition d'objectif
-    if (showGoalDialog) {
-        GoalDialog(
-            goal = editingGoal,
-            onDismiss = { 
-                showGoalDialog = false
-                editingGoal = null
+    // Dialogue d'ajout/modification d'objectif
+    if (showAddEditDialog != null) {
+        val goal = showAddEditDialog!!
+        var title by remember { mutableStateOf(goal.title) }
+        var points by remember { mutableStateOf(goal.points.toString()) }
+        var details by remember { mutableStateOf(goal.details) }
+
+        AlertDialog(
+            onDismissRequest = { showAddEditDialog = null },
+            title = {
+                LocalizedText(
+                    text = if (goal.id == 0) "new_goal" else "edit_goal_title"
+                )
             },
-            onSave = { title, points, details ->
-                if (editingGoal != null) {
-                    viewModel.updateGoal(editingGoal!!.id, title, points, details)
-                } else {
-                    viewModel.addGoal(title, points, details)
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = title,
+                        onValueChange = { title = it },
+                        label = { LocalizedText(text = "goal_title_label") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    OutlinedTextField(
+                        value = points,
+                        onValueChange = { points = it },
+                        label = { LocalizedText(text = "goal_points_label") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    OutlinedTextField(
+                        value = details,
+                        onValueChange = { details = it },
+                        label = { LocalizedText(text = "goal_details_label") },
+                        modifier = Modifier.fillMaxWidth(),
+                        minLines = 3
+                    )
                 }
-                showGoalDialog = false
-                editingGoal = null
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val updatedGoal = Goal(
+                            id = goal.id,
+                            title = title,
+                            points = points.toIntOrNull() ?: 0,
+                            details = details
+                        )
+                        if (goal.id == 0) {
+                            viewModel.addGoal(title, points.toIntOrNull() ?: 0, details)
+                        } else {
+                            viewModel.updateGoal(goal.id, title, points.toIntOrNull() ?: 0, details)
+                        }
+                        showAddEditDialog = null
+                    }
+                ) {
+                    LocalizedText(text = "save")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showAddEditDialog = null }) {
+                    LocalizedText(text = "cancel")
+                }
             }
         )
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun GoalDialog(
-    goal: Goal?,
-    onDismiss: () -> Unit,
-    onSave: (String, Int, String) -> Unit
-) {
-    var title by remember { mutableStateOf(goal?.title ?: "") }
-    var points by remember { mutableStateOf(goal?.points?.toString() ?: "") }
-    var details by remember { mutableStateOf(goal?.details ?: "") }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = if (goal == null) "Nouvel objectif" else "Modifier l'objectif") },
-        text = {
-            Column {
-                TextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    label = { Text("Titre de l'objectif") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                
-                Spacer(modifier = Modifier.height(8.dp))
-                
-                TextField(
-                    value = points,
-                    onValueChange = { points = it.filter { char -> char.isDigit() } },
-                    label = { Text("Points") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                
-                Spacer(modifier = Modifier.height(8.dp))
-                
-                TextField(
-                    value = details,
-                    onValueChange = { details = it },
-                    label = { Text("Détails") },
-                    modifier = Modifier.fillMaxWidth(),
-                    minLines = 3
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    if (title.isNotBlank() && points.isNotBlank()) {
-                        onSave(title, points.toInt(), details)
-                    }
-                }
-            ) {
-                Text("Enregistrer")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Annuler")
-            }
-        }
-    )
 } 

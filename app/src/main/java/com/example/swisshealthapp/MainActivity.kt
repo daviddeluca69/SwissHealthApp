@@ -9,7 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -21,12 +20,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.swisshealthapp.navigation.Screen
-import com.example.swisshealthapp.screens.CalendarScreen
-import com.example.swisshealthapp.screens.DailyGoalsScreen
-import com.example.swisshealthapp.screens.LanguageScreen
-import com.example.swisshealthapp.screens.SettingsScreen
-import com.example.swisshealthapp.screens.StatsScreen
+import com.example.swisshealthapp.screens.*
 import com.example.swisshealthapp.ui.theme.SwissHealthAppTheme
+import com.example.swisshealthapp.ui.components.LocalizedText
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +54,7 @@ fun MainScreen() {
                                 contentDescription = null
                             )
                         },
-                        label = { Text(getLabelForScreen(screen)) },
+                        label = { LocalizedText(text = getLabelForScreen(screen)) },
                         selected = currentDestination?.hierarchy?.any { it.route == screen.name } == true,
                         onClick = {
                             navController.navigate(screen.name) {
@@ -83,6 +79,7 @@ fun MainScreen() {
             composable(Screen.STATS.name) { StatsScreen() }
             composable(Screen.SETTINGS.name) { SettingsScreen() }
             composable(Screen.LANGUAGE.name) { LanguageScreen() }
+            composable(Screen.DONATION.name) { DonationScreen() }
         }
     }
 }
@@ -93,14 +90,16 @@ fun getIconForScreen(screen: Screen): Int {
         Screen.STATS -> R.drawable.ic_stats
         Screen.SETTINGS -> R.drawable.ic_settings
         Screen.LANGUAGE -> R.drawable.ic_language
+        Screen.DONATION -> R.drawable.ic_donation
     }
 }
 
 fun getLabelForScreen(screen: Screen): String {
     return when (screen) {
-        Screen.DAILY_GOALS -> "Objectifs"
-        Screen.STATS -> "Statistiques"
-        Screen.SETTINGS -> "Paramètres"
-        Screen.LANGUAGE -> "Langue"
+        Screen.DAILY_GOALS -> "tab_goals"
+        Screen.STATS -> "tab_stats"
+        Screen.SETTINGS -> "tab_settings"
+        Screen.LANGUAGE -> "tab_language"
+        Screen.DONATION -> "tab_donation"
     }
 }

@@ -17,6 +17,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swisshealthapp.model.Goal
 import com.example.swisshealthapp.viewmodel.DailyGoalsViewModel
+import com.example.swisshealthapp.ui.components.LocalizedText
+import com.example.swisshealthapp.ui.components.LocalizedTextWithParams
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -49,7 +51,7 @@ fun DailyGoalsScreen(
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text("Aujourd'hui")
+            LocalizedText(text = "today")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -131,10 +133,12 @@ fun DailyHeader(
         
         Spacer(modifier = Modifier.height(4.dp))
         
-        Text(
-            text = "Points: $totalPoints / $maxPoints",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary
+        LocalizedTextWithParams(
+            text = "points_format",
+            params = arrayOf(totalPoints, maxPoints),
+            style = MaterialTheme.typography.titleMedium.copy(
+                color = MaterialTheme.colorScheme.primary
+            )
         )
         
         LinearProgressIndicator(
@@ -162,13 +166,19 @@ fun GoalDetailsDialog(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text(
-                    text = goal.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                LocalizedText(
+                    text = "goal_details",
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    )
                 )
                 
                 Spacer(modifier = Modifier.height(8.dp))
+                
+                Text(
+                    text = goal.title,
+                    style = MaterialTheme.typography.titleMedium
+                )
                 
                 Text(
                     text = "${goal.points} points",
@@ -189,7 +199,7 @@ fun GoalDetailsDialog(
                     onClick = onDismiss,
                     modifier = Modifier.align(Alignment.End)
                 ) {
-                    Text("Fermer")
+                    LocalizedText(text = "close")
                 }
             }
         }

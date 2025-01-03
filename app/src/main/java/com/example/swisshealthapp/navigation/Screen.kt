@@ -4,7 +4,8 @@ enum class Screen {
     DAILY_GOALS,
     STATS,
     SETTINGS,
-    LANGUAGE;
+    LANGUAGE,
+    DONATION;
 
     companion object {
         fun fromRoute(route: String?): Screen =
@@ -13,6 +14,7 @@ enum class Screen {
                 STATS.name -> STATS
                 SETTINGS.name -> SETTINGS
                 LANGUAGE.name -> LANGUAGE
+                DONATION.name -> DONATION
                 null -> DAILY_GOALS
                 else -> throw IllegalArgumentException("Route $route is not recognized.")
             }
