@@ -10,7 +10,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.swisshealthapp"
+        applicationId = "com.ddeluca.swisshealthapp"
         minSdk = 33
         targetSdk = 34
         versionCode = 1
