@@ -1,6 +1,7 @@
 package com.example.swisshealthapp.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
@@ -17,14 +18,19 @@ class DailyGoalsViewModel(application: Application) : AndroidViewModel(applicati
     val goalsWithStatus: StateFlow<Map<LocalDate, List<Goal>>> = _goalsWithStatus
 
     init {
+        Log.d("DailyGoalsViewModel", "Initialisation du ViewModel")
         viewModelScope.launch {
+            repository.initializeIfNeeded()
+            Log.d("DailyGoalsViewModel", "Début de la collecte des objectifs")
             repository.goals.collect { goals ->
+                Log.d("DailyGoalsViewModel", "Nouveaux objectifs reçus: ${goals.size} objectifs")
                 updateAllVisibleDates(goals)
             }
         }
     }
 
     private suspend fun updateAllVisibleDates(goals: List<Goal>) {
+        Log.d("DailyGoalsViewModel", "Mise à jour des dates visibles avec ${goals.size} objectifs")
         val today = LocalDate.now()
         val visibleDates = (-30..30).map { today.plusDays(it.toLong()) }
         val newGoalsMap = mutableMapOf<LocalDate, List<Goal>>()
@@ -39,19 +45,16 @@ class DailyGoalsViewModel(application: Application) : AndroidViewModel(applicati
         }
         
         _goalsWithStatus.value = newGoalsMap
-    }
-
-    fun setCurrentDate(date: LocalDate) {
-        _currentDate.value = date
+        Log.d("DailyGoalsViewModel", "Mise à jour terminée, ${newGoalsMap.size} dates mises à jour")
     }
 
     fun toggleGoalCompletion(goalId: Int, date: LocalDate) {
+        Log.d("DailyGoalsViewModel", "Toggle objectif $goalId pour la date $date")
         viewModelScope.launch {
             val dateStr = date.format(DateTimeFormatter.ISO_DATE)
             val currentStatus = repository.getGoalCompletionStatus(goalId, dateStr).first()
             repository.updateGoalCompletion(goalId, dateStr, !currentStatus)
             
-            // Mettre à jour uniquement la date concernée
             val currentGoals = repository.goals.first()
             val updatedGoals = currentGoals.map { goal ->
                 val isCompleted = if (goal.id == goalId) !currentStatus 
@@ -64,6 +67,12 @@ class DailyGoalsViewModel(application: Application) : AndroidViewModel(applicati
                     put(date, updatedGoals)
                 }
             }
+            Log.d("DailyGoalsViewModel", "Toggle terminé, nouveau statut: ${!currentStatus}")
         }
+    }
+
+    fun setCurrentDate(date: LocalDate) {
+        _currentDate.value = date
+        Log.d("DailyGoalsViewModel", "Nouvelle date sélectionnée: $date")
     }
 } 

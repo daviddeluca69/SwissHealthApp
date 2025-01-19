@@ -31,7 +31,7 @@ object LocalizedStrings {
         "pts" to "pts",
 
         // Settings Screen
-        "settings" to "Paramètres",
+        "settings" to "Param",
         "goals_management" to "Gestion des objectifs",
         "add_goal" to "Ajouter un objectif",
         "edit_goal" to "Modifier",
