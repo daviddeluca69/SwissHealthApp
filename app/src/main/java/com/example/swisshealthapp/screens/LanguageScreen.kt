@@ -41,7 +41,7 @@ fun LanguageScreen(
                     .selectableGroup()
                     .padding(16.dp)
             ) {
-                Language.values().forEach { language ->
+                Language.entries.forEach { language ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -76,7 +76,7 @@ fun LanguageScreen(
                         }
                     }
                     
-                    if (language != Language.values().last()) {
+                    if (language != Language.entries.last()) {
                         HorizontalDivider(
                             modifier = Modifier.padding(vertical = 8.dp)
                         )

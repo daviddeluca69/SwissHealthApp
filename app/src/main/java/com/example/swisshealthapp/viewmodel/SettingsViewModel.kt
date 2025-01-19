@@ -5,14 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import com.example.swisshealthapp.model.Settings
 import com.example.swisshealthapp.model.Goal
 import com.example.swisshealthapp.data.GoalsRepository
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = GoalsRepository(application)
-    private val _settings = MutableStateFlow(Settings())
-    val settings: StateFlow<Settings> = _settings
     val goals = repository.goals
 
     init {
@@ -46,14 +43,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             }
             repository.saveGoals(updatedGoals)
         }
-    }
-
-    fun updateDailyNotification(enabled: Boolean) {
-        _settings.value = _settings.value.copy(dailyNotification = enabled)
-    }
-
-    fun updateDarkTheme(enabled: Boolean) {
-        _settings.value = _settings.value.copy(darkTheme = enabled)
     }
 
     fun deleteGoal(id: Int) {
