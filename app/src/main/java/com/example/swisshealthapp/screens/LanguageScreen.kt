@@ -87,13 +87,26 @@ fun LanguageScreen(
         
         Spacer(modifier = Modifier.height(16.dp))
         
-        Text(
-            text = when (currentLanguage) {
-                Language.FRENCH -> "La langue sélectionnée sera appliquée à l'ensemble de l'application."
-                Language.ENGLISH -> "The selected language will be applied to the entire application."
-            },
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        Column {
+            Text(
+                text = when (currentLanguage) {
+                    Language.FRENCH -> "La langue sélectionnée sera appliquée à l'ensemble de l'application."
+                    Language.ENGLISH -> "The selected language will be applied to the entire application."
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            Text(
+                text = when (currentLanguage) {
+                    Language.FRENCH -> "Attention : le changement de langue réinitialisera tous les objectifs à leurs valeurs par défaut dans la nouvelle langue."
+                    Language.ENGLISH -> "Warning: changing the language will reset all goals to their default values in the new language."
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
     }
 } 

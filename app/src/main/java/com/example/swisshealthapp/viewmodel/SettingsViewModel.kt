@@ -68,4 +68,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             repository.clearAllData()
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.onCleared()
+    }
 } 

@@ -12,7 +12,7 @@ object LocalizedStrings {
         // Navigation
         "tab_goals" to "Objectifs",
         "tab_stats" to "Stats",
-        "tab_settings" to "Paramètres",
+        "tab_settings" to "Param",
         "tab_language" to "Langue",
         "tab_donation" to "Don",
 
@@ -31,7 +31,7 @@ object LocalizedStrings {
         "pts" to "pts",
 
         // Settings Screen
-        "settings" to "Param",
+        "settings" to "Paramètres",
         "goals_management" to "Gestion des objectifs",
         "add_goal" to "Ajouter un objectif",
         "edit_goal" to "Modifier",
