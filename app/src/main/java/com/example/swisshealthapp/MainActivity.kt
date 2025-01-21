@@ -78,7 +78,7 @@ fun MainScreen() {
             composable(Screen.DAILY_GOALS.name) { DailyGoalsScreen() }
             composable(Screen.STATS.name) { StatsScreen() }
             composable(Screen.SETTINGS.name) { SettingsScreen() }
-            composable(Screen.LANGUAGE.name) { LanguageScreen() }
+            composable(Screen.RESULTS.name) { ResultsScreen() }
             composable(Screen.DONATION.name) { DonationScreen() }
         }
     }
@@ -89,7 +89,7 @@ fun getIconForScreen(screen: Screen): Int {
         Screen.DAILY_GOALS -> R.drawable.ic_goals
         Screen.STATS -> R.drawable.ic_stats
         Screen.SETTINGS -> R.drawable.ic_settings
-        Screen.LANGUAGE -> R.drawable.ic_language
+        Screen.RESULTS -> R.drawable.ic_goals
         Screen.DONATION -> R.drawable.ic_donation
     }
 }
@@ -99,7 +99,7 @@ fun getLabelForScreen(screen: Screen): String {
         Screen.DAILY_GOALS -> "tab_goals"
         Screen.STATS -> "tab_stats"
         Screen.SETTINGS -> "tab_settings"
-        Screen.LANGUAGE -> "tab_language"
+        Screen.RESULTS -> "tab_results"
         Screen.DONATION -> "tab_donation"
     }
 }

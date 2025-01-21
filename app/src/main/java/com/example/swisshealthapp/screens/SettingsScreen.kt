@@ -2,6 +2,8 @@ package com.example.swisshealthapp.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -9,16 +11,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swisshealthapp.model.Goal
+import com.example.swisshealthapp.model.Language
 import com.example.swisshealthapp.viewmodel.SettingsViewModel
 import com.example.swisshealthapp.ui.components.LocalizedText
 import com.example.swisshealthapp.ui.components.LocalizedTextWithParams
+import com.example.swisshealthapp.viewmodel.LanguageViewModel
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = viewModel()
+    viewModel: SettingsViewModel = viewModel(),
+    languageViewModel: LanguageViewModel = viewModel()
 ) {
     var showDeleteDialog by remember { mutableStateOf<Goal?>(null) }
     var showResetDialog by remember { mutableStateOf(false) }
@@ -130,6 +136,64 @@ fun SettingsScreen(
                     ) {
                         LocalizedText(text = "reset_app")
                     }
+                }
+            }
+        }
+
+        item {
+            Card {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    LocalizedText(
+                        text = "language_section",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    val currentLanguage by languageViewModel.currentLanguage.collectAsState()
+                    
+                    Column(modifier = Modifier.selectableGroup()) {
+                        Language.values().forEach { language ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .selectable(
+                                        selected = language == currentLanguage,
+                                        onClick = { languageViewModel.setLanguage(language) },
+                                        role = Role.RadioButton
+                                    )
+                                    .padding(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = language == currentLanguage,
+                                    onClick = null
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(text = language.name)
+                            }
+                        }
+                    }
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    Text(
+                        text = "La langue sélectionnée sera appliquée à l'ensemble de l'application.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    Text(
+                        text = "Attention : le changement de langue réinitialisera tous les objectifs à leurs valeurs par défaut dans la nouvelle langue.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             }
         }

@@ -13,7 +13,7 @@ object LocalizedStrings {
         "tab_goals" to "Objectifs",
         "tab_stats" to "Stats",
         "tab_settings" to "Param",
-        "tab_language" to "Langue",
+        "tab_results" to "Résultats",
         "tab_donation" to "Don",
 
         // Goals Screen
@@ -33,6 +33,7 @@ object LocalizedStrings {
         // Settings Screen
         "settings" to "Paramètres",
         "goals_management" to "Gestion des objectifs",
+        "language_section" to "Langue",
         "add_goal" to "Ajouter un objectif",
         "edit_goal" to "Modifier",
         "delete_goal" to "Supprimer",
@@ -51,6 +52,10 @@ object LocalizedStrings {
         "goal_details_label" to "Détails",
         "save" to "Enregistrer",
 
+        // Results Screen
+        "results_title" to "Résultats",
+        "results_coming_soon" to "Cette fonctionnalité sera bientôt disponible !",
+
         // Donation Screen
         "donation_title" to "Soutenir le développeur",
         "donation_message" to "Si cette application vous est utile et vous aide à maintenir de bonnes habitudes de santé, vous pouvez soutenir son développement. Votre contribution permettra d'améliorer l'application et d'ajouter de nouvelles fonctionnalités.",
@@ -66,7 +71,7 @@ object LocalizedStrings {
         "tab_goals" to "Goals",
         "tab_stats" to "Statistics",
         "tab_settings" to "Settings",
-        "tab_language" to "Language",
+        "tab_results" to "Results",
         "tab_donation" to "Donate",
 
         // Goals Screen
@@ -86,6 +91,7 @@ object LocalizedStrings {
         // Settings Screen
         "settings" to "Settings",
         "goals_management" to "Goals Management",
+        "language_section" to "Language",
         "add_goal" to "Add Goal",
         "edit_goal" to "Edit",
         "delete_goal" to "Delete",
@@ -103,6 +109,10 @@ object LocalizedStrings {
         "goal_points_label" to "Points",
         "goal_details_label" to "Details",
         "save" to "Save",
+
+        // Results Screen
+        "results_title" to "Results",
+        "results_coming_soon" to "This feature will be available soon!",
 
         // Donation Screen
         "donation_title" to "Support the Developer",
