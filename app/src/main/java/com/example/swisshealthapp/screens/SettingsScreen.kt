@@ -57,7 +57,13 @@ fun SettingsScreen(
                         style = MaterialTheme.typography.titleLarge
                     )
                     
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    LocalizedText(
+                        text = "goals_management_info",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
                     
                     Button(
                         onClick = { showAddEditDialog = Goal(0, "", 0, "") },
@@ -157,7 +163,7 @@ fun SettingsScreen(
                     val currentLanguage by languageViewModel.currentLanguage.collectAsState()
                     
                     Column(modifier = Modifier.selectableGroup()) {
-                        Language.values().forEach { language ->
+                        Language.entries.forEach { language ->
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -300,12 +306,6 @@ fun SettingsScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        val updatedGoal = Goal(
-                            id = goal.id,
-                            title = title,
-                            points = points.toIntOrNull() ?: 0,
-                            details = details
-                        )
                         if (goal.id == 0) {
                             viewModel.addGoal(title, points.toIntOrNull() ?: 0, details)
                         } else {

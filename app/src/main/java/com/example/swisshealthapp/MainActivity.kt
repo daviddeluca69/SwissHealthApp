@@ -89,7 +89,7 @@ fun getIconForScreen(screen: Screen): Int {
         Screen.DAILY_GOALS -> R.drawable.ic_goals
         Screen.STATS -> R.drawable.ic_stats
         Screen.SETTINGS -> R.drawable.ic_settings
-        Screen.RESULTS -> R.drawable.ic_goals
+        Screen.RESULTS -> R.drawable.ic_results
         Screen.DONATION -> R.drawable.ic_donation
     }
 }

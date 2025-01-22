@@ -28,11 +28,14 @@ object LocalizedStrings {
         "today_stats" to "Aujourd'hui",
         "average" to "Moyenne",
         "maximum" to "Maximum",
+        "goals_stats" to "Objectifs",
+        "results_stats" to "Résultats",
         "pts" to "pts",
 
         // Settings Screen
         "settings" to "Paramètres",
         "goals_management" to "Gestion des objectifs",
+        "goals_management_info" to "Pour une meilleure lisibilité, si vous supprimez/ajoutez ou modifiez un objectif, vérifiez d'avoir toujours un nombre total de points égal à 100",
         "language_section" to "Langue",
         "add_goal" to "Ajouter un objectif",
         "edit_goal" to "Modifier",
@@ -82,15 +85,18 @@ object LocalizedStrings {
         "goal_details" to "Goal Details",
 
         // Stats Screen
-        "last_ten_days_points" to "Last 10 Days Points",
+        "last_ten_days_points" to "Points for the last 10 days",
         "today_stats" to "Today",
         "average" to "Average",
         "maximum" to "Maximum",
+        "goals_stats" to "Goals",
+        "results_stats" to "Results",
         "pts" to "pts",
 
         // Settings Screen
         "settings" to "Settings",
         "goals_management" to "Goals Management",
+        "goals_management_info" to "For better readability, if you delete/add or modify a goal, make sure to always have a total of 100 points",
         "language_section" to "Language",
         "add_goal" to "Add Goal",
         "edit_goal" to "Edit",
