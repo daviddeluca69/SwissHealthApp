@@ -64,4 +64,5 @@ dependencies {
     implementation("com.patrykandpatrick.vico:compose:1.12.0")
     implementation("com.patrykandpatrick.vico:compose-m3:1.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }
