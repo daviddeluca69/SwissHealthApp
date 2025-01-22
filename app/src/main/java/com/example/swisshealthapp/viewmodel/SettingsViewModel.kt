@@ -7,9 +7,11 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import com.example.swisshealthapp.model.Goal
 import com.example.swisshealthapp.data.GoalsRepository
+import com.example.swisshealthapp.data.ResultsRepository
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = GoalsRepository(application)
+    private val resultsRepository = ResultsRepository(application)
     val goals = repository.goals
 
     init {
@@ -55,6 +57,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun clearAllData() {
         viewModelScope.launch {
             repository.clearAllData()
+            resultsRepository.clearAllData()
         }
     }
 

@@ -8,6 +8,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.swisshealthapp.model.Goal
 import com.example.swisshealthapp.model.Language
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -15,6 +16,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 
 private val Context.resultsDataStore: DataStore<Preferences> by preferencesDataStore(name = "results")
 
@@ -25,6 +28,7 @@ class ResultsRepository(private val context: Context) {
         prettyPrint = true
     }
     private val languageRepository = LanguageRepository(context)
+    private val _resultsFlow = MutableStateFlow<List<Goal>>(emptyList())
     
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -102,11 +106,19 @@ class ResultsRepository(private val context: Context) {
         when (language) {
             Language.FRENCH -> defaultResultsFrench
             Language.ENGLISH -> defaultResultsEnglish
-        }
+        }.also { _resultsFlow.value = it }
     }
 
     init {
         Log.d(TAG, "Initialisation du ResultsRepository")
+        scope.launch {
+            languageRepository.currentLanguage.collect { language ->
+                _resultsFlow.value = when (language) {
+                    Language.FRENCH -> defaultResultsFrench
+                    Language.ENGLISH -> defaultResultsEnglish
+                }
+            }
+        }
     }
 
     fun onCleared() {
@@ -146,5 +158,19 @@ class ResultsRepository(private val context: Context) {
         return context.resultsDataStore.data.map { preferences ->
             preferences[PreferencesKeys.RESULTS_COMPLETION] ?: "{}"
         }
+    }
+
+    suspend fun clearAllData() {
+        Log.d(TAG, "Début de clearAllData pour les résultats")
+        context.resultsDataStore.edit { preferences ->
+            preferences.clear()
+        }
+        // Forcer une mise à jour des résultats
+        val currentLanguage = languageRepository.currentLanguage.first()
+        _resultsFlow.value = when (currentLanguage) {
+            Language.FRENCH -> defaultResultsFrench
+            Language.ENGLISH -> defaultResultsEnglish
+        }
+        Log.d(TAG, "Réinitialisation des résultats terminée")
     }
 } 

@@ -26,6 +26,16 @@ class ResultsViewModel(application: Application) : AndroidViewModel(application)
                 updateAllVisibleDates(results)
             }
         }
+
+        // Surveiller les changements dans les données du DataStore des résultats
+        viewModelScope.launch {
+            repository.getResultsCompletionFlow()
+                .onEach { _ -> 
+                    val currentResults = repository.results.first()
+                    updateAllVisibleDates(currentResults)
+                }
+                .collect()
+        }
     }
 
     private suspend fun updateAllVisibleDates(results: List<Goal>) {
