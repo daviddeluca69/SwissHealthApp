@@ -7,16 +7,22 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swisshealthapp.model.Goal
+import com.example.swisshealthapp.model.Language
+import com.example.swisshealthapp.model.LocalizedStrings
 import com.example.swisshealthapp.viewmodel.ResultsViewModel
+import com.example.swisshealthapp.viewmodel.LanguageViewModel
 import com.example.swisshealthapp.ui.components.LocalizedText
 import com.example.swisshealthapp.ui.components.LocalizedTextWithParams
 import java.time.LocalDate
@@ -37,6 +43,13 @@ fun ResultsScreen(
     val coroutineScope = rememberCoroutineScope()
     val today = remember { LocalDate.now() }
     val resultsMap by viewModel.resultsWithStatus.collectAsState()
+    val currentDate = today.plusDays(pagerState.currentPage.toLong() - 30)
+    val dailyNote by viewModel.dailyNote.collectAsState()
+
+    LaunchedEffect(pagerState.currentPage) {
+        val date = today.plusDays(pagerState.currentPage.toLong() - 30)
+        viewModel.setCurrentDate(date)
+    }
 
     Column(
         modifier = Modifier
@@ -62,16 +75,14 @@ fun ResultsScreen(
         ) { page ->
             val date = today.plusDays(page.toLong() - 30)
             val results = resultsMap[date] ?: emptyList()
-            
-            LaunchedEffect(date) {
-                viewModel.setCurrentDate(date)
-            }
 
             ResultsContent(
                 date = date,
                 results = results,
+                dailyNote = if (date == currentDate) dailyNote else "",
                 onResultClick = { resultId -> viewModel.toggleResultCompletion(resultId, date) },
-                onResultDetails = { selectedResult = it }
+                onResultDetails = { selectedResult = it },
+                onNoteChange = { viewModel.saveDailyNote(it) }
             )
         }
     }
@@ -88,12 +99,21 @@ fun ResultsScreen(
 private fun ResultsContent(
     date: LocalDate,
     results: List<Goal>,
+    dailyNote: String,
     onResultClick: (Int) -> Unit,
-    onResultDetails: (Goal) -> Unit
+    onResultDetails: (Goal) -> Unit,
+    onNoteChange: (String) -> Unit
 ) {
     Column {
         ResultsHeader(date = date, results = results)
         
+        Spacer(modifier = Modifier.height(16.dp))
+
+        DailyNoteSection(
+            note = dailyNote,
+            onNoteChange = onNoteChange
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
@@ -147,6 +167,98 @@ private fun ResultsHeader(
                 .padding(vertical = 8.dp),
             progress = { if (maxPoints > 0) totalPoints.toFloat() / maxPoints else 0f }
         )
+    }
+}
+
+@Composable
+private fun DailyNoteSection(
+    note: String,
+    onNoteChange: (String) -> Unit
+) {
+    var isEditing by remember { mutableStateOf(false) }
+    var editedNote by remember(note) { mutableStateOf(note) }
+    val languageViewModel: LanguageViewModel = viewModel()
+    val currentLanguage by languageViewModel.currentLanguage.collectAsState()
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = LocalizedStrings.get("daily_note", currentLanguage),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+                if (!isEditing) {
+                    IconButton(onClick = { isEditing = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (isEditing) {
+                TextField(
+                    value = editedNote,
+                    onValueChange = { editedNote = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = {
+                        LocalizedText(text = "enter_daily_note")
+                    }
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = { 
+                        isEditing = false
+                        editedNote = note // Reset to original note if cancelled
+                    }) {
+                        LocalizedText(text = "cancel")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = {
+                            onNoteChange(editedNote)
+                            isEditing = false
+                        }
+                    ) {
+                        LocalizedText(text = "save")
+                    }
+                }
+            } else {
+                if (note.isNotEmpty()) {
+                    Text(
+                        text = note,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                } else {
+                    Text(
+                        text = LocalizedStrings.get("no_note_yet", currentLanguage),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
     }
 }
 

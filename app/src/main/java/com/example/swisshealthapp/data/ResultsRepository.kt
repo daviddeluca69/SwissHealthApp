@@ -34,6 +34,7 @@ class ResultsRepository(private val context: Context) {
 
     private object PreferencesKeys {
         val RESULTS_COMPLETION = stringPreferencesKey("results_completion")
+        val DAILY_NOTES = stringPreferencesKey("daily_notes")
     }
 
     private val defaultResultsFrench = listOf(
@@ -157,6 +158,32 @@ class ResultsRepository(private val context: Context) {
     fun getResultsCompletionFlow(): Flow<String> {
         return context.resultsDataStore.data.map { preferences ->
             preferences[PreferencesKeys.RESULTS_COMPLETION] ?: "{}"
+        }
+    }
+
+    suspend fun saveDailyNote(date: String, note: String) {
+        context.resultsDataStore.edit { preferences ->
+            val notesJson = preferences[PreferencesKeys.DAILY_NOTES] ?: "{}"
+            val notesMap = try {
+                json.decodeFromString<Map<String, String>>(notesJson).toMutableMap()
+            } catch (e: Exception) {
+                mutableMapOf()
+            }
+            
+            notesMap[date] = note
+            preferences[PreferencesKeys.DAILY_NOTES] = json.encodeToString(notesMap)
+        }
+    }
+
+    fun getDailyNote(date: String): Flow<String> {
+        return context.resultsDataStore.data.map { preferences ->
+            val notesJson = preferences[PreferencesKeys.DAILY_NOTES] ?: "{}"
+            try {
+                val notesMap = json.decodeFromString<Map<String, String>>(notesJson)
+                notesMap[date] ?: ""
+            } catch (e: Exception) {
+                ""
+            }
         }
     }
 

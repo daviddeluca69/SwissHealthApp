@@ -15,7 +15,10 @@ class ResultsViewModel(application: Application) : AndroidViewModel(application)
     private val repository = ResultsRepository(application)
     private val _currentDate = MutableStateFlow(LocalDate.now())
     private val _resultsWithStatus = MutableStateFlow<Map<LocalDate, List<Goal>>>(emptyMap())
+    private val _dailyNote = MutableStateFlow("")
     val resultsWithStatus: StateFlow<Map<LocalDate, List<Goal>>> = _resultsWithStatus
+    val dailyNote: StateFlow<String> = _dailyNote
+    val currentDate: StateFlow<LocalDate> = _currentDate
 
     init {
         Log.d("ResultsViewModel", "Initialisation du ViewModel")
@@ -35,6 +38,27 @@ class ResultsViewModel(application: Application) : AndroidViewModel(application)
                     updateAllVisibleDates(currentResults)
                 }
                 .collect()
+        }
+
+        // Observer les changements de date pour mettre à jour la note
+        viewModelScope.launch {
+            _currentDate.collect { date ->
+                Log.d("ResultsViewModel", "Changement de date: $date")
+                updateDailyNote(date)
+            }
+        }
+    }
+
+    private suspend fun updateDailyNote(date: LocalDate) {
+        val dateStr = date.format(DateTimeFormatter.ISO_DATE)
+        _dailyNote.value = "" // Réinitialiser la note pendant le chargement
+        try {
+            val note = repository.getDailyNote(dateStr).first()
+            Log.d("ResultsViewModel", "Note récupérée pour $dateStr: $note")
+            _dailyNote.value = note
+        } catch (e: Exception) {
+            Log.e("ResultsViewModel", "Erreur lors de la récupération de la note pour $dateStr", e)
+            _dailyNote.value = ""
         }
     }
 
@@ -58,7 +82,17 @@ class ResultsViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun setCurrentDate(date: LocalDate) {
+        Log.d("ResultsViewModel", "Définition de la nouvelle date: $date")
         _currentDate.value = date
+    }
+
+    fun saveDailyNote(note: String) {
+        viewModelScope.launch {
+            val dateStr = _currentDate.value.format(DateTimeFormatter.ISO_DATE)
+            Log.d("ResultsViewModel", "Sauvegarde de la note pour $dateStr: $note")
+            repository.saveDailyNote(dateStr, note)
+            _dailyNote.value = note
+        }
     }
 
     fun toggleResultCompletion(resultId: Int, date: LocalDate) {

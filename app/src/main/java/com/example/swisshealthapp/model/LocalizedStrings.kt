@@ -58,6 +58,9 @@ object LocalizedStrings {
         // Results Screen
         "results_title" to "Résultats",
         "results_coming_soon" to "Cette fonctionnalité sera bientôt disponible !",
+        "daily_note" to "Note du jour",
+        "enter_daily_note" to "Écrivez votre note ici...",
+        "no_note_yet" to "Aucune note pour aujourd'hui",
 
         // Donation Screen
         "donation_title" to "Soutenir le développeur",
@@ -119,6 +122,9 @@ object LocalizedStrings {
         // Results Screen
         "results_title" to "Results",
         "results_coming_soon" to "This feature will be available soon!",
+        "daily_note" to "Daily Note",
+        "enter_daily_note" to "Write your note here...",
+        "no_note_yet" to "No note for today",
 
         // Donation Screen
         "donation_title" to "Support the Developer",
