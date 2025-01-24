@@ -1,3 +1,16 @@
+/**
+ * Activité principale de l'application Swiss Health
+ * 
+ * Cette activité est responsable de :
+ * - L'initialisation de l'application et de son interface utilisateur
+ * - La configuration du thème et du support edge-to-edge
+ * - La mise en place de la navigation entre les différents écrans
+ * - L'affichage de la barre de navigation inférieure avec les icônes et labels traduits
+ * 
+ * L'application utilise Jetpack Compose pour l'interface utilisateur et
+ * la navigation entre les écrans est gérée via une NavHost avec restauration d'état
+ */
+
 package com.example.swisshealthapp
 
 import android.os.Bundle
@@ -24,10 +37,14 @@ import com.example.swisshealthapp.screens.*
 import com.example.swisshealthapp.ui.theme.SwissHealthAppTheme
 import com.example.swisshealthapp.ui.components.LocalizedText
 
+/**
+ * Activité principale servant de point d'entrée à l'application
+ * Configure l'interface et initialise la navigation
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Active le support edge-to-edge pour une meilleure utilisation de l'écran
         setContent {
             SwissHealthAppTheme {
                 MainScreen()
@@ -36,6 +53,16 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * Écran principal de l'application
+ * Gère la navigation entre les différentes sections via une barre de navigation inférieure
+ * 
+ * Fonctionnalités :
+ * - Navigation fluide entre les écrans
+ * - Restauration de l'état des écrans lors de la navigation
+ * - Barre de navigation avec icônes et labels traduits
+ * - Support du mode edge-to-edge avec padding approprié
+ */
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
@@ -46,6 +73,7 @@ fun MainScreen() {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
+                // Création des items de navigation pour chaque écran
                 Screen.entries.forEach { screen ->
                     NavigationBarItem(
                         icon = { 
@@ -58,6 +86,7 @@ fun MainScreen() {
                         selected = currentDestination?.hierarchy?.any { it.route == screen.name } == true,
                         onClick = {
                             navController.navigate(screen.name) {
+                                // Restaure l'état de l'écran lors de la navigation
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
@@ -70,6 +99,7 @@ fun MainScreen() {
             }
         }
     ) { innerPadding ->
+        // Configuration du graphe de navigation
         NavHost(
             navController = navController,
             startDestination = Screen.DAILY_GOALS.name,
@@ -84,6 +114,13 @@ fun MainScreen() {
     }
 }
 
+/**
+ * Récupère l'icône correspondant à un écran donné
+ * Chaque écran possède une icône distinctive dans les ressources drawables
+ * 
+ * @param screen Écran dont on veut l'icône
+ * @return Identifiant de la ressource drawable de l'icône
+ */
 fun getIconForScreen(screen: Screen): Int {
     return when (screen) {
         Screen.DAILY_GOALS -> R.drawable.ic_goals
@@ -94,6 +131,14 @@ fun getIconForScreen(screen: Screen): Int {
     }
 }
 
+/**
+ * Récupère la clé de traduction pour le label d'un écran
+ * Ces clés sont utilisées avec le système de localisation pour afficher
+ * les labels dans la langue sélectionnée par l'utilisateur
+ * 
+ * @param screen Écran dont on veut le label
+ * @return Clé de traduction pour le label
+ */
 fun getLabelForScreen(screen: Screen): String {
     return when (screen) {
         Screen.DAILY_GOALS -> "tab_goals"

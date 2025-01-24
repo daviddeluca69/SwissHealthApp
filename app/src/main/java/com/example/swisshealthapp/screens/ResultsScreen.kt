@@ -1,5 +1,17 @@
 package com.example.swisshealthapp.screens
 
+/**
+ * Écran des résultats quotidiens de l'application Swiss Health
+ * 
+ * Cet écran permet de :
+ * - Visualiser et gérer les résultats quotidiens de santé
+ * - Naviguer entre différentes dates via un système de pagination horizontale
+ * - Ajouter des notes quotidiennes pour suivre son évolution
+ * - Voir les détails de chaque résultat dans une boîte de dialogue
+ * 
+ * L'écran utilise un HorizontalPager pour permettre la navigation fluide entre les dates
+ */
+
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -28,6 +40,12 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.coroutines.launch
 
+/**
+ * Composant principal de l'écran des résultats
+ * Gère la navigation entre les dates et l'affichage des résultats quotidiens
+ * 
+ * @param viewModel ViewModel gérant les données des résultats
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ResultsScreen(
@@ -93,6 +111,17 @@ fun ResultsScreen(
     }
 }
 
+/**
+ * Affiche le contenu principal pour une date donnée
+ * Inclut l'en-tête avec la date, la note quotidienne et la liste des résultats
+ * 
+ * @param date Date sélectionnée
+ * @param results Liste des résultats pour la date
+ * @param dailyNote Note quotidienne associée
+ * @param onResultClick Callback lors du clic sur un résultat
+ * @param onResultDetails Callback pour afficher les détails d'un résultat
+ * @param onNoteChange Callback lors de la modification de la note
+ */
 @Composable
 private fun ResultsContent(
     date: LocalDate,
@@ -129,6 +158,13 @@ private fun ResultsContent(
     }
 }
 
+/**
+ * Affiche l'en-tête de la page des résultats
+ * Contient la date et la progression des points
+ * 
+ * @param date Date à afficher
+ * @param results Liste des résultats pour calculer les points
+ */
 @Composable
 private fun ResultsHeader(
     date: LocalDate,
@@ -168,6 +204,12 @@ private fun ResultsHeader(
     }
 }
 
+/**
+ * Section permettant d'ajouter et modifier la note quotidienne
+ * 
+ * @param note Contenu actuel de la note
+ * @param onNoteChange Callback appelé lors de la modification de la note
+ */
 @Composable
 private fun DailyNoteSection(
     note: String,
@@ -260,6 +302,14 @@ private fun DailyNoteSection(
     }
 }
 
+/**
+ * Affiche un résultat individuel sous forme de carte
+ * Permet de marquer le résultat comme complété et d'accéder aux détails
+ * 
+ * @param result Résultat à afficher
+ * @param onResultClick Callback lors du clic sur la case à cocher
+ * @param onResultDetails Callback pour afficher les détails
+ */
 @Composable
 private fun ResultItem(
     result: Goal,
@@ -299,6 +349,13 @@ private fun ResultItem(
     }
 }
 
+/**
+ * Boîte de dialogue affichant les détails d'un résultat
+ * Inclut le titre, la description et les points associés
+ * 
+ * @param result Résultat dont on affiche les détails
+ * @param onDismiss Callback pour fermer la boîte de dialogue
+ */
 @Composable
 private fun ResultDetailsDialog(
     result: Goal,

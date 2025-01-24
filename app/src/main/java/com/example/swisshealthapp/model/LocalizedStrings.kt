@@ -1,6 +1,22 @@
 package com.example.swisshealthapp.model
 
+/**
+ * Gestionnaire des chaînes de caractères localisées de l'application
+ * 
+ * Cette classe singleton gère :
+ * - Les traductions en français et en anglais
+ * - L'accès aux chaînes traduites via une clé
+ * - L'organisation des traductions par sections (navigation, écrans, etc.)
+ */
+
 object LocalizedStrings {
+    /**
+     * Récupère une chaîne traduite selon la langue spécifiée
+     * 
+     * @param key Clé de la chaîne à traduire
+     * @param language Langue cible
+     * @return Chaîne traduite ou la clé si aucune traduction n'est trouvée
+     */
     fun get(key: String, language: Language): String {
         return when (language) {
             Language.FRENCH -> frenchStrings[key] ?: key
@@ -8,6 +24,10 @@ object LocalizedStrings {
         }
     }
 
+    /**
+     * Dictionnaire des chaînes en français
+     * Organisé par sections pour une meilleure maintenance
+     */
     private val frenchStrings = mapOf(
         // Navigation
         "tab_goals" to "Objectifs",
@@ -16,14 +36,14 @@ object LocalizedStrings {
         "tab_results" to "Résultats",
         "tab_donation" to "Don",
 
-        // Goals Screen
+        // Écran des objectifs
         "today" to "Aujourd'hui",
         "points" to "Points",
         "close" to "Fermer",
         "points_format" to "Points: %d / %d",
         "goal_details" to "Détails de l'objectif",
 
-        // Stats Screen
+        // Écran des statistiques
         "last_ten_days_points" to "Points des 10 derniers jours",
         "today_stats" to "Aujourd'hui",
         "average" to "Moyenne",
@@ -32,7 +52,7 @@ object LocalizedStrings {
         "results_stats" to "Résultats",
         "pts" to "pts",
 
-        // Settings Screen
+        // Écran des paramètres
         "settings" to "Paramètres",
         "goals_management" to "Gestion des objectifs",
         "goals_management_info" to "Pour une meilleure lisibilité, si vous supprimez/ajoutez ou modifiez un objectif, vérifiez d'avoir toujours un nombre total de points égal à 100",
@@ -55,14 +75,14 @@ object LocalizedStrings {
         "goal_details_label" to "Détails",
         "save" to "Enregistrer",
 
-        // Results Screen
+        // Écran des résultats
         "results_title" to "Résultats",
         "results_coming_soon" to "Cette fonctionnalité sera bientôt disponible !",
         "daily_note" to "Note du jour",
         "enter_daily_note" to "Écrivez votre note ici...",
         "no_note_yet" to "Aucune note pour aujourd'hui",
 
-        // Donation Screen
+        // Écran des dons
         "donation_title" to "Soutenir le développeur",
         "donation_message" to "Si cette application vous est utile et vous aide à maintenir de bonnes habitudes de santé, vous pouvez soutenir son développement. Votre contribution permettra d'améliorer l'application et d'ajouter de nouvelles fonctionnalités.",
         "donation_email" to "Contact par email :",
@@ -72,6 +92,10 @@ object LocalizedStrings {
         "make_donation" to "Faire un don au développeur"
     )
 
+    /**
+     * Dictionnaire des chaînes en anglais
+     * Structure identique au dictionnaire français
+     */
     private val englishStrings = mapOf(
         // Navigation
         "tab_goals" to "Goals",
@@ -80,14 +104,14 @@ object LocalizedStrings {
         "tab_results" to "Results",
         "tab_donation" to "Donate",
 
-        // Goals Screen
+        // Écran des objectifs
         "today" to "Today",
         "points" to "Points",
         "close" to "Close",
         "points_format" to "Points: %d / %d",
         "goal_details" to "Goal Details",
 
-        // Stats Screen
+        // Écran des statistiques
         "last_ten_days_points" to "Points for the last 10 days",
         "today_stats" to "Today",
         "average" to "Average",
@@ -96,7 +120,7 @@ object LocalizedStrings {
         "results_stats" to "Results",
         "pts" to "pts",
 
-        // Settings Screen
+        // Écran des paramètres
         "settings" to "Settings",
         "goals_management" to "Goals Management",
         "goals_management_info" to "For better readability, if you delete/add or modify a goal, make sure to always have a total of 100 points",
@@ -119,14 +143,14 @@ object LocalizedStrings {
         "goal_details_label" to "Details",
         "save" to "Save",
 
-        // Results Screen
+        // Écran des résultats
         "results_title" to "Results",
         "results_coming_soon" to "This feature will be available soon!",
         "daily_note" to "Daily Note",
         "enter_daily_note" to "Write your note here...",
         "no_note_yet" to "No note for today",
 
-        // Donation Screen
+        // Écran des dons
         "donation_title" to "Support the Developer",
         "donation_message" to "If this app is helpful and helps you maintain good health habits, you can support its development. Your contribution will help improve the app and add new features.",
         "donation_email" to "Contact by email:",

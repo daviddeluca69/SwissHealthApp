@@ -1,5 +1,18 @@
 package com.example.swisshealthapp.data
 
+/**
+ * Repository gérant la persistance des résultats de santé
+ * 
+ * Cette classe est responsable de :
+ * - La gestion des résultats par défaut en français et anglais
+ * - La persistance des résultats via DataStore
+ * - Le suivi de l'état des résultats quotidiens
+ * - La gestion des notes quotidiennes
+ * - L'adaptation des résultats selon la langue sélectionnée
+ * 
+ * Elle utilise DataStore pour une persistance efficace et réactive des données
+ */
+
 import android.content.Context
 import android.util.Log
 import androidx.datastore.core.DataStore
@@ -19,24 +32,48 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
 
+/**
+ * Extension property pour accéder au DataStore des résultats
+ */
 private val Context.resultsDataStore: DataStore<Preferences> by preferencesDataStore(name = "results")
 
 class ResultsRepository(private val context: Context) {
     private val TAG = "ResultsRepository"
+    /**
+     * Configuration du sérialiseur JSON pour la persistance
+     */
     private val json = Json { 
         ignoreUnknownKeys = true 
         prettyPrint = true
     }
+
+    /**
+     * Repository de langue pour adapter les résultats à la langue courante
+     */
     private val languageRepository = LanguageRepository(context)
+
+    /**
+     * État interne des résultats
+     */
     private val _resultsFlow = MutableStateFlow<List<Goal>>(emptyList())
     
+    /**
+     * Scope pour gérer les coroutines du repository
+     */
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
+    /**
+     * Clés pour les préférences DataStore
+     */
     private object PreferencesKeys {
         val RESULTS_COMPLETION = stringPreferencesKey("results_completion")
         val DAILY_NOTES = stringPreferencesKey("daily_notes")
     }
 
+    /**
+     * Liste des résultats par défaut en français
+     * Chaque résultat représente un aspect de la santé à évaluer
+     */
     private val defaultResultsFrench = listOf(
         Goal(
             id = 1,
@@ -70,6 +107,10 @@ class ResultsRepository(private val context: Context) {
         )
     )
 
+    /**
+     * Liste des résultats par défaut en anglais
+     * Structure identique à la version française
+     */
     private val defaultResultsEnglish = listOf(
         Goal(
             id = 1,
@@ -103,6 +144,10 @@ class ResultsRepository(private val context: Context) {
         )
     )
 
+    /**
+     * Flow exposant les résultats selon la langue courante
+     * Se met à jour automatiquement lors des changements de langue
+     */
     val results: Flow<List<Goal>> = languageRepository.currentLanguage.map { language ->
         when (language) {
             Language.FRENCH -> defaultResultsFrench
@@ -122,10 +167,20 @@ class ResultsRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Libère les ressources du repository
+     */
     fun onCleared() {
         scope.cancel()
     }
 
+    /**
+     * Met à jour l'état de complétion d'un résultat pour une date donnée
+     * 
+     * @param goalId Identifiant du résultat
+     * @param date Date au format ISO
+     * @param isCompleted Nouvel état de complétion
+     */
     suspend fun updateResultCompletion(goalId: Int, date: String, isCompleted: Boolean) {
         context.resultsDataStore.edit { preferences ->
             val completionJson = preferences[PreferencesKeys.RESULTS_COMPLETION] ?: "{}"
@@ -143,6 +198,13 @@ class ResultsRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Récupère l'état de complétion d'un résultat pour une date donnée
+     * 
+     * @param goalId Identifiant du résultat
+     * @param date Date au format ISO
+     * @return Flow émettant l'état de complétion
+     */
     fun getResultCompletionStatus(goalId: Int, date: String): Flow<Boolean> {
         return context.resultsDataStore.data.map { preferences ->
             val completionJson = preferences[PreferencesKeys.RESULTS_COMPLETION] ?: "{}"
@@ -161,6 +223,12 @@ class ResultsRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Sauvegarde une note quotidienne pour une date donnée
+     * 
+     * @param date Date au format ISO
+     * @param note Contenu de la note
+     */
     suspend fun saveDailyNote(date: String, note: String) {
         context.resultsDataStore.edit { preferences ->
             val notesJson = preferences[PreferencesKeys.DAILY_NOTES] ?: "{}"
@@ -175,6 +243,12 @@ class ResultsRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Récupère la note quotidienne pour une date donnée
+     * 
+     * @param date Date au format ISO
+     * @return Flow émettant la note ou une chaîne vide si aucune note n'existe
+     */
     fun getDailyNote(date: String): Flow<String> {
         return context.resultsDataStore.data.map { preferences ->
             val notesJson = preferences[PreferencesKeys.DAILY_NOTES] ?: "{}"
@@ -187,6 +261,10 @@ class ResultsRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Efface toutes les données des résultats
+     * Réinitialise les résultats et les notes
+     */
     suspend fun clearAllData() {
         Log.d(TAG, "Début de clearAllData pour les résultats")
         context.resultsDataStore.edit { preferences ->

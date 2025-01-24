@@ -1,5 +1,15 @@
 package com.example.swisshealthapp.ui.components
 
+/**
+ * Composants Compose pour l'affichage de texte localisé
+ * 
+ * Ce fichier fournit deux composants :
+ * - LocalizedText : pour afficher un texte simple localisé
+ * - LocalizedTextWithParams : pour afficher un texte localisé avec des paramètres
+ * 
+ * Les composants s'adaptent automatiquement à la langue sélectionnée
+ */
+
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,6 +21,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swisshealthapp.model.LocalizedStrings
 import com.example.swisshealthapp.viewmodel.LanguageViewModel
 
+/**
+ * Composant pour afficher un texte localisé simple
+ * 
+ * @param text Clé de la chaîne à localiser
+ * @param modifier Modificateur Compose optionnel
+ * @param style Style de texte à appliquer
+ * @param viewModel ViewModel gérant la langue courante
+ */
 @Composable
 fun LocalizedText(
     text: String,
@@ -26,6 +44,16 @@ fun LocalizedText(
     )
 }
 
+/**
+ * Composant pour afficher un texte localisé avec des paramètres
+ * Utilise String.format pour insérer les paramètres dans le texte
+ * 
+ * @param text Clé de la chaîne à localiser
+ * @param params Paramètres à insérer dans le texte
+ * @param modifier Modificateur Compose optionnel
+ * @param style Style de texte à appliquer
+ * @param viewModel ViewModel gérant la langue courante
+ */
 @Composable
 fun LocalizedTextWithParams(
     text: String,

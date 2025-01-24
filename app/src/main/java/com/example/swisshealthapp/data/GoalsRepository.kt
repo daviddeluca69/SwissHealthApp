@@ -1,5 +1,17 @@
 package com.example.swisshealthapp.data
 
+/**
+ * Repository gérant la persistance des objectifs de santé
+ * 
+ * Cette classe est responsable de :
+ * - La gestion des objectifs par défaut en français et anglais
+ * - La persistance des objectifs via DataStore
+ * - Le suivi de l'état de complétion des objectifs
+ * - L'adaptation des objectifs selon la langue sélectionnée
+ * 
+ * Elle utilise DataStore pour une persistance efficace et réactive des données
+ */
+
 import android.content.Context
 import android.util.Log
 import androidx.datastore.core.DataStore
@@ -18,24 +30,43 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.cancel
 
+/**
+ * Extension property pour accéder au DataStore des objectifs
+ */
 private val Context.goalsDataStore: DataStore<Preferences> by preferencesDataStore(name = "goals")
 
 class GoalsRepository(private val context: Context) {
     private val TAG = "GoalsRepository"
+    /**
+     * Configuration du sérialiseur JSON pour la persistance
+     */
     private val json = Json { 
         ignoreUnknownKeys = true 
         prettyPrint = true
     }
+
+    /**
+     * Repository de langue pour adapter les objectifs à la langue courante
+     */
     private val languageRepository = LanguageRepository(context)
     
+    /**
+     * Scope pour gérer les coroutines du repository
+     */
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
+    /**
+     * Clés pour les préférences DataStore
+     */
     private object PreferencesKeys {
         val GOALS = stringPreferencesKey("goals")
         val GOALS_COMPLETION = stringPreferencesKey("goals_completion")
         val INITIALIZED = booleanPreferencesKey("initialized")
     }
 
+    /**
+     * Liste des objectifs par défaut en français
+     */
     private val defaultGoalsFrench = listOf(
         Goal(
             id = 1,
@@ -99,6 +130,9 @@ class GoalsRepository(private val context: Context) {
         )
     )
 
+    /**
+     * Liste des objectifs par défaut en anglais
+     */
     private val defaultGoalsEnglish = listOf(
         Goal(
             id = 1,
@@ -162,6 +196,10 @@ class GoalsRepository(private val context: Context) {
         )
     )
 
+    /**
+     * Flow exposant les objectifs actuels
+     * Convertit automatiquement le JSON stocké en liste d'objectifs
+     */
     val goals: Flow<List<Goal>> = context.goalsDataStore.data
         .map { preferences ->
             val goalsJson = preferences[PreferencesKeys.GOALS] ?: "[]"
@@ -182,10 +220,19 @@ class GoalsRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Libère les ressources du repository
+     */
     fun onCleared() {
         scope.cancel()
     }
 
+    /**
+     * Met à jour les objectifs selon la langue sélectionnée
+     * Préserve l'état de complétion tout en mettant à jour les textes
+     * 
+     * @param language Langue cible pour les objectifs
+     */
     private suspend fun updateGoalsForLanguage(language: Language) {
         Log.d(TAG, "Mise à jour des objectifs pour la langue: $language")
         val currentGoals = goals.first()
@@ -216,6 +263,10 @@ class GoalsRepository(private val context: Context) {
         saveGoals(updatedGoals)
     }
 
+    /**
+     * Initialise les objectifs par défaut si nécessaire
+     * Utilise la langue courante pour choisir les objectifs appropriés
+     */
     suspend fun initializeIfNeeded() {
         Log.d(TAG, "Début de initializeIfNeeded")
         val preferences = context.goalsDataStore.data.first()
@@ -249,6 +300,11 @@ class GoalsRepository(private val context: Context) {
 
     private fun Boolean?.isTrue() = this == true
 
+    /**
+     * Sauvegarde une nouvelle liste d'objectifs
+     * 
+     * @param goals Liste des objectifs à sauvegarder
+     */
     suspend fun saveGoals(goals: List<Goal>) {
         Log.d(TAG, "Sauvegarde de ${goals.size} objectifs")
         Log.d(TAG, "Premier objectif: ${goals.firstOrNull()?.title}")
@@ -258,6 +314,13 @@ class GoalsRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Met à jour l'état de complétion d'un objectif pour une date donnée
+     * 
+     * @param goalId Identifiant de l'objectif
+     * @param date Date au format ISO
+     * @param isCompleted Nouvel état de complétion
+     */
     suspend fun updateGoalCompletion(goalId: Int, date: String, isCompleted: Boolean) {
         context.goalsDataStore.edit { preferences ->
             val completionJson = preferences[PreferencesKeys.GOALS_COMPLETION] ?: "{}"
@@ -275,6 +338,13 @@ class GoalsRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Récupère l'état de complétion d'un objectif pour une date donnée
+     * 
+     * @param goalId Identifiant de l'objectif
+     * @param date Date au format ISO
+     * @return Flow émettant l'état de complétion
+     */
     fun getGoalCompletionStatus(goalId: Int, date: String): Flow<Boolean> {
         return context.goalsDataStore.data.map { preferences ->
             val completionJson = preferences[PreferencesKeys.GOALS_COMPLETION] ?: "{}"
@@ -287,6 +357,10 @@ class GoalsRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Efface toutes les données et réinitialise les objectifs par défaut
+     * selon la langue courante
+     */
     suspend fun clearAllData() {
         Log.d(TAG, "Début de clearAllData")
         context.goalsDataStore.edit { preferences ->

@@ -1,3 +1,16 @@
+/**
+ * Écran des statistiques de l'application Swiss Health
+ * 
+ * Cet écran affiche les tendances des points sur les 10 derniers jours, incluant :
+ * - Un graphique comparatif entre les objectifs et les résultats
+ * - Des statistiques sommaires (aujourd'hui, moyenne, maximum) pour les objectifs et les résultats
+ * - Une légende pour différencier les séries de données
+ * 
+ * Le graphique utilise la bibliothèque Vico pour le rendu des données
+ * L'interface est organisée en cartes distinctes pour une meilleure lisibilité
+ * Les données sont mises à jour automatiquement via le StatsViewModel
+ */
+
 package com.example.swisshealthapp.screens
 
 import androidx.compose.foundation.layout.*
@@ -21,6 +34,15 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+/**
+ * Composant principal de l'écran des statistiques
+ * Organise l'affichage des données statistiques en plusieurs sections :
+ * - Titre de la section
+ * - Cartes des statistiques pour les objectifs et les résultats
+ * - Graphique comparatif avec légende
+ * 
+ * @param viewModel ViewModel gérant les données statistiques
+ */
 @Composable
 fun StatsScreen(
     viewModel: StatsViewModel = viewModel()
@@ -43,7 +65,7 @@ fun StatsScreen(
         Spacer(modifier = Modifier.height(16.dp))
         
         if (goalsPoints.isNotEmpty() && resultsPoints.isNotEmpty()) {
-            // Statistiques sommaires des objectifs
+            // Carte des statistiques des objectifs
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -79,7 +101,7 @@ fun StatsScreen(
                 }
             }
 
-            // Statistiques sommaires des résultats
+            // Carte des statistiques des résultats
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -117,13 +139,14 @@ fun StatsScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Graphique
+            // Carte du graphique comparatif
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
                     .padding(vertical = 8.dp)
             ) {
+                // Préparation des données pour le graphique
                 val goalsEntries = goalsPoints.mapIndexed { index, points ->
                     FloatEntry(index.toFloat(), points.toFloat())
                 }
@@ -132,6 +155,7 @@ fun StatsScreen(
                 }
                 val chartEntryModel = ChartEntryModelProducer(listOf(goalsEntries, resultsEntries)).getModel()
                 
+                // Configuration et affichage du graphique
                 Chart(
                     chart = lineChart(
                         lines = listOf(
@@ -167,7 +191,7 @@ fun StatsScreen(
                     )
                 )
 
-                // Légende
+                // Légende du graphique
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -175,7 +199,7 @@ fun StatsScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Légende pour les objectifs
+                    // Indicateur pour les objectifs
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(end = 16.dp)
@@ -195,7 +219,7 @@ fun StatsScreen(
                         )
                     }
 
-                    // Légende pour les résultats
+                    // Indicateur pour les résultats
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -216,6 +240,7 @@ fun StatsScreen(
                 }
             }
         } else {
+            // Indicateur de chargement
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -226,6 +251,13 @@ fun StatsScreen(
     }
 }
 
+/**
+ * Composant affichant un élément statistique individuel
+ * Organise verticalement un titre traduit et une valeur numérique
+ * 
+ * @param title Clé de traduction pour le titre de la statistique
+ * @param value Valeur à afficher (ex: "42 pts")
+ */
 @Composable
 fun StatItem(
     title: String,

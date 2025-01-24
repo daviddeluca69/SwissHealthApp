@@ -1,5 +1,17 @@
 package com.example.swisshealthapp.screens
 
+/**
+ * Écran des objectifs quotidiens de l'application Swiss Health
+ * 
+ * Cet écran permet de :
+ * - Visualiser et gérer les objectifs quotidiens de santé
+ * - Naviguer entre différentes dates via un système de pagination horizontale
+ * - Marquer les objectifs comme complétés ou non
+ * - Voir les détails de chaque objectif dans une boîte de dialogue
+ * 
+ * L'écran utilise un HorizontalPager pour permettre la navigation fluide entre les dates
+ */
+
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -24,6 +36,12 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.coroutines.launch
 
+/**
+ * Composant principal de l'écran des objectifs quotidiens
+ * Gère la navigation entre les dates et l'affichage des objectifs
+ * 
+ * @param viewModel ViewModel gérant les données des objectifs
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DailyGoalsScreen(
@@ -31,8 +49,8 @@ fun DailyGoalsScreen(
 ) {
     var selectedGoal by remember { mutableStateOf<Goal?>(null) }
     val pagerState = rememberPagerState(
-        initialPage = 30,
-        pageCount = { 61 }
+        initialPage = 30,  // Page centrale représentant aujourd'hui
+        pageCount = { 61 } // 30 jours avant et après aujourd'hui
     )
     val coroutineScope = rememberCoroutineScope()
     val today = remember { LocalDate.now() }
@@ -43,6 +61,7 @@ fun DailyGoalsScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        // Bouton pour revenir à aujourd'hui
         Button(
             onClick = {
                 coroutineScope.launch {
@@ -56,6 +75,7 @@ fun DailyGoalsScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Système de pagination horizontale
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
@@ -76,6 +96,7 @@ fun DailyGoalsScreen(
         }
     }
 
+    // Affichage de la boîte de dialogue des détails si un objectif est sélectionné
     selectedGoal?.let { goal ->
         GoalDetailsDialog(
             goal = goal,
@@ -84,6 +105,15 @@ fun DailyGoalsScreen(
     }
 }
 
+/**
+ * Affiche le contenu principal pour une date donnée
+ * Inclut l'en-tête avec la date et la liste des objectifs
+ * 
+ * @param date Date sélectionnée
+ * @param goals Liste des objectifs pour la date
+ * @param onGoalClick Callback lors du clic sur la case à cocher
+ * @param onGoalDetails Callback pour afficher les détails
+ */
 @Composable
 fun DailyContent(
     date: LocalDate,
@@ -111,6 +141,13 @@ fun DailyContent(
     }
 }
 
+/**
+ * Affiche l'en-tête de la page des objectifs
+ * Contient la date et la progression des points
+ * 
+ * @param date Date à afficher
+ * @param goals Liste des objectifs pour calculer les points
+ */
 @Composable
 fun DailyHeader(
     date: LocalDate,
@@ -150,6 +187,13 @@ fun DailyHeader(
     }
 }
 
+/**
+ * Boîte de dialogue affichant les détails d'un objectif
+ * Inclut le titre, les points et la description détaillée
+ * 
+ * @param goal Objectif dont on affiche les détails
+ * @param onDismiss Callback pour fermer la boîte de dialogue
+ */
 @Composable
 fun GoalDetailsDialog(
     goal: Goal,
@@ -206,6 +250,14 @@ fun GoalDetailsDialog(
     }
 }
 
+/**
+ * Affiche un objectif individuel sous forme de carte
+ * Permet de marquer l'objectif comme complété et d'accéder aux détails
+ * 
+ * @param goal Objectif à afficher
+ * @param onGoalClick Callback lors du clic sur la case à cocher
+ * @param onGoalDetails Callback pour afficher les détails
+ */
 @Composable
 fun GoalItem(
     goal: Goal,

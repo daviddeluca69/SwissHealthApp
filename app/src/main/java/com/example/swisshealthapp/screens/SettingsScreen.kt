@@ -1,3 +1,15 @@
+/**
+ * Écran des paramètres de l'application Swiss Health
+ * 
+ * Cet écran permet aux utilisateurs de :
+ * - Gérer les objectifs de santé (ajout, modification, suppression)
+ * - Changer la langue de l'application
+ * - Réinitialiser les données de l'application
+ * 
+ * L'interface est organisée en sections distinctes avec des cartes
+ * pour une meilleure lisibilité et une navigation intuitive
+ */
+
 package com.example.swisshealthapp.screens
 
 import androidx.compose.foundation.layout.*
@@ -21,23 +33,34 @@ import com.example.swisshealthapp.ui.components.LocalizedText
 import com.example.swisshealthapp.ui.components.LocalizedTextWithParams
 import com.example.swisshealthapp.viewmodel.LanguageViewModel
 
+/**
+ * Composant principal de l'écran des paramètres
+ * Gère l'affichage et les interactions avec les différentes options de configuration
+ * 
+ * @param viewModel ViewModel gérant les paramètres et objectifs
+ * @param languageViewModel ViewModel gérant la langue de l'application
+ */
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = viewModel(),
     languageViewModel: LanguageViewModel = viewModel()
 ) {
+    // États pour gérer les différentes boîtes de dialogue
     var showDeleteDialog by remember { mutableStateOf<Goal?>(null) }
     var showResetDialog by remember { mutableStateOf(false) }
     var showAddEditDialog by remember { mutableStateOf<Goal?>(null) }
     
+    // Liste des objectifs actuels
     val goals by viewModel.goals.collectAsState(initial = emptyList())
 
+    // Contenu principal organisé en liste déroulante
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        // Titre de l'écran
         item {
             LocalizedText(
                 text = "settings",
@@ -45,6 +68,7 @@ fun SettingsScreen(
             )
         }
 
+        // Section de gestion des objectifs
         item {
             Card {
                 Column(
@@ -52,6 +76,7 @@ fun SettingsScreen(
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
+                    // Titre de la section
                     LocalizedText(
                         text = "goals_management",
                         style = MaterialTheme.typography.titleLarge
@@ -59,12 +84,14 @@ fun SettingsScreen(
                     
                     Spacer(modifier = Modifier.height(8.dp))
                     
+                    // Message d'information sur la gestion des points
                     LocalizedText(
                         text = "goals_management_info",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                     
+                    // Bouton d'ajout d'un nouvel objectif
                     Button(
                         onClick = { showAddEditDialog = Goal(0, "", 0, "") },
                         modifier = Modifier.fillMaxWidth()
@@ -74,6 +101,7 @@ fun SettingsScreen(
                     
                     Spacer(modifier = Modifier.height(8.dp))
                     
+                    // Liste des objectifs existants avec options de modification/suppression
                     goals.forEach { goal ->
                         Row(
                             modifier = Modifier
@@ -92,17 +120,19 @@ fun SettingsScreen(
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                             }
+                            
+                            // Boutons d'action pour l'objectif
                             Row {
                                 IconButton(onClick = { showAddEditDialog = goal }) {
                                     Icon(
                                         imageVector = Icons.Default.Edit,
-                                        contentDescription = "Modifier l'objectif"
+                                        contentDescription = "edit_goal"
                                     )
                                 }
                                 IconButton(onClick = { showDeleteDialog = goal }) {
                                     Icon(
                                         imageVector = Icons.Default.Delete,
-                                        contentDescription = "Supprimer l'objectif"
+                                        contentDescription = "delete_goal"
                                     )
                                 }
                             }
@@ -115,6 +145,7 @@ fun SettingsScreen(
             }
         }
 
+        // Section de sélection de la langue
         item {
             Card {
                 Column(
@@ -123,7 +154,7 @@ fun SettingsScreen(
                         .padding(16.dp)
                 ) {
                     LocalizedText(
-                        text = "reset_section",
+                        text = "language_section",
                         style = MaterialTheme.typography.titleLarge
                     )
                     
@@ -205,7 +236,7 @@ fun SettingsScreen(
         }
     }
 
-    // Dialogue de suppression
+    // Boîtes de dialogue pour les différentes actions
     if (showDeleteDialog != null) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = null },
@@ -225,7 +256,7 @@ fun SettingsScreen(
                         showDeleteDialog = null
                     }
                 ) {
-                    LocalizedText(text = "confirm_delete")
+                    LocalizedText(text = "delete")
                 }
             },
             dismissButton = {
@@ -236,12 +267,11 @@ fun SettingsScreen(
         )
     }
 
-    // Dialogue de réinitialisation
     if (showResetDialog) {
         AlertDialog(
             onDismissRequest = { showResetDialog = false },
-            title = { LocalizedText(text = "reset_app") },
-            text = { LocalizedText(text = "reset_confirmation") },
+            title = { LocalizedText(text = "confirm_reset") },
+            text = { LocalizedText(text = "reset_message") },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -249,7 +279,7 @@ fun SettingsScreen(
                         showResetDialog = false
                     }
                 ) {
-                    LocalizedText(text = "confirm_reset")
+                    LocalizedText(text = "reset")
                 }
             },
             dismissButton = {
@@ -260,7 +290,6 @@ fun SettingsScreen(
         )
     }
 
-    // Dialogue d'ajout/modification d'objectif
     if (showAddEditDialog != null) {
         val goal = showAddEditDialog!!
         var title by remember { mutableStateOf(goal.title) }
@@ -282,18 +311,14 @@ fun SettingsScreen(
                         label = { LocalizedText(text = "goal_title_label") },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    
                     Spacer(modifier = Modifier.height(8.dp))
-                    
                     OutlinedTextField(
                         value = points,
                         onValueChange = { points = it },
-                        label = { LocalizedText(text = "goal_points_label") },
+                        label = { LocalizedText(text = "goal_points") },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    
                     Spacer(modifier = Modifier.height(8.dp))
-                    
                     OutlinedTextField(
                         value = details,
                         onValueChange = { details = it },

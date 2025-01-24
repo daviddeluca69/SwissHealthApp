@@ -1,5 +1,14 @@
 package com.example.swisshealthapp.ui.theme
 
+/**
+ * Configuration du thème de l'application Swiss Health
+ * 
+ * Ce fichier définit :
+ * - Les schémas de couleurs pour les thèmes clair et sombre
+ * - Le support des couleurs dynamiques de Material You
+ * - L'application du thème à l'ensemble de l'application
+ */
+
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -11,14 +20,21 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
+/**
+ * Schéma de couleurs pour le thème sombre
+ * Utilise les couleurs suisses comme base
+ */
 private val DarkColorScheme = darkColorScheme(
-    primary =
-    SwissRed,
+    primary = SwissRed,
     secondary = SwissRedDark,
     tertiary = SwissRedLight,
     background = SwissWhite
 )
 
+/**
+ * Schéma de couleurs pour le thème clair
+ * Utilise les mêmes couleurs de base que le thème sombre
+ */
 private val LightColorScheme = lightColorScheme(
     primary = SwissRed,
     secondary = SwissRedDark,
@@ -26,6 +42,13 @@ private val LightColorScheme = lightColorScheme(
     background = SwissWhite
 )
 
+/**
+ * Composant principal du thème de l'application
+ * 
+ * @param darkTheme Active le thème sombre si vrai
+ * @param dynamicColor Active les couleurs dynamiques sur Android 12+
+ * @param content Contenu de l'application à styliser
+ */
 @Composable
 fun SwissHealthAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
