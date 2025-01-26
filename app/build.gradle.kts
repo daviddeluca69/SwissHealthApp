@@ -6,15 +6,15 @@ plugins {
 }
 
 android {
-    namespace = "com.example.swisshealthpremiumapp"
+    namespace = "com.example.swisshealthapp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.ddeluca.swisshealthpremiumapp"
+        applicationId = "com.ddeluca.swisshealthapp"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
