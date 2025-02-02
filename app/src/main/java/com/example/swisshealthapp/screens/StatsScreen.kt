@@ -28,6 +28,7 @@ import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.compose.chart.line.lineSpec
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.FloatEntry
+import com.patrykandpatrick.vico.core.entry.entryModelOf
 import com.example.swisshealthapp.viewmodel.StatsViewModel
 import com.example.swisshealthapp.ui.components.LocalizedText
 import java.time.LocalDate
@@ -169,7 +170,7 @@ fun StatsScreen(
                             )
                         )
                     ),
-                    model = chartEntryModel,
+                    model = chartEntryModel ?: entryModelOf(listOf<FloatEntry>()),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
