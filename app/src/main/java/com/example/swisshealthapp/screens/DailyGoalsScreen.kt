@@ -35,6 +35,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.coroutines.launch
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 /**
  * Composant principal de l'écran des objectifs quotidiens
@@ -290,7 +292,14 @@ fun GoalItem(
             }
             Checkbox(
                 checked = goal.isCompleted,
-                onCheckedChange = { onGoalClick() }
+                onCheckedChange = { onGoalClick() },
+                modifier = Modifier.semantics {
+                    contentDescription = if (goal.isCompleted) {
+                        "Objectif ${goal.title} coché"
+                    } else {
+                        "Objectif ${goal.title} non coché"
+                    }
+                }
             )
         }
     }

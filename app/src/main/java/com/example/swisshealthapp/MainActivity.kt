@@ -36,6 +36,8 @@ import com.example.swisshealthapp.navigation.Screen
 import com.example.swisshealthapp.screens.*
 import com.example.swisshealthapp.ui.theme.SwissHealthAppTheme
 import com.example.swisshealthapp.ui.components.LocalizedText
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 /**
  * Activité principale servant de point d'entrée à l'application
@@ -79,10 +81,17 @@ fun MainScreen() {
                         icon = { 
                             Icon(
                                 painter = painterResource(id = getIconForScreen(screen)),
-                                contentDescription = getLabelForScreen(screen)
+                                contentDescription = "navigation_tab_${getLabelForScreen(screen)}"
                             )
                         },
-                        label = { LocalizedText(text = getLabelForScreen(screen)) },
+                        label = { 
+                            LocalizedText(
+                                text = getLabelForScreen(screen),
+                                modifier = Modifier.semantics {
+                                    contentDescription = "navigation_label_${getLabelForScreen(screen)}"
+                                }
+                            ) 
+                        },
                         selected = currentDestination?.hierarchy?.any { it.route == screen.name } == true,
                         onClick = {
                             navController.navigate(screen.name) {

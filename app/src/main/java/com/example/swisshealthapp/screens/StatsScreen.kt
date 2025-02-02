@@ -34,6 +34,8 @@ import com.example.swisshealthapp.ui.components.LocalizedText
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 /**
  * Composant principal de l'écran des statistiques
@@ -115,7 +117,10 @@ fun StatsScreen(
                 ) {
                     LocalizedText(
                         text = "results_stats",
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.semantics {
+                            contentDescription = "section_title_results_stats"
+                        }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
@@ -231,11 +236,17 @@ fun StatsScreen(
                                     color = MaterialTheme.colorScheme.secondary,
                                     shape = MaterialTheme.shapes.small
                                 )
+                                .semantics {
+                                    contentDescription = "graph_legend_results"
+                                }
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         LocalizedText(
                             text = "results_stats",
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.semantics {
+                                contentDescription = "graph_legend_label_results"
+                            }
                         )
                     }
                 }

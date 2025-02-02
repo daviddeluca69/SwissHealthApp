@@ -23,6 +23,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -123,16 +125,26 @@ fun SettingsScreen(
                             
                             // Boutons d'action pour l'objectif
                             Row {
-                                IconButton(onClick = { showAddEditDialog = goal }) {
+                                IconButton(
+                                    onClick = { showAddEditDialog = goal },
+                                    modifier = Modifier.semantics {
+                                        contentDescription = "edit_goal_button_${goal.title}"
+                                    }
+                                ) {
                                     Icon(
                                         imageVector = Icons.Default.Edit,
-                                        contentDescription = "edit_goal"
+                                        contentDescription = null
                                     )
                                 }
-                                IconButton(onClick = { showDeleteDialog = goal }) {
+                                IconButton(
+                                    onClick = { showDeleteDialog = goal },
+                                    modifier = Modifier.semantics {
+                                        contentDescription = "delete_goal_button_${goal.title}"
+                                    }
+                                ) {
                                     Icon(
                                         imageVector = Icons.Default.Delete,
-                                        contentDescription = "delete_goal"
+                                        contentDescription = null
                                     )
                                 }
                             }

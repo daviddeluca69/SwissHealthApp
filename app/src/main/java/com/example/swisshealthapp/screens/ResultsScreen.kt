@@ -39,6 +39,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.coroutines.launch
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 /**
  * Composant principal de l'écran des résultats
@@ -343,7 +345,14 @@ private fun ResultItem(
             }
             Checkbox(
                 checked = result.isCompleted,
-                onCheckedChange = { onResultClick() }
+                onCheckedChange = { onResultClick() },
+                modifier = Modifier.semantics {
+                    contentDescription = if (result.isCompleted) {
+                        "Résultat ${result.title} coché"
+                    } else {
+                        "Résultat ${result.title} non coché"
+                    }
+                }
             )
         }
     }
