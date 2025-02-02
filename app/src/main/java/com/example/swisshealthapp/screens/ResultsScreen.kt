@@ -245,7 +245,7 @@ private fun DailyNoteSection(
                     IconButton(onClick = { isEditing = true }) {
                         Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = null
+                            contentDescription = "edit_daily_note"
                         )
                     }
                 }

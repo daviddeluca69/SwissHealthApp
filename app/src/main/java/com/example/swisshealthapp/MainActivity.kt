@@ -79,7 +79,7 @@ fun MainScreen() {
                         icon = { 
                             Icon(
                                 painter = painterResource(id = getIconForScreen(screen)),
-                                contentDescription = null
+                                contentDescription = getLabelForScreen(screen)
                             )
                         },
                         label = { LocalizedText(text = getLabelForScreen(screen)) },
