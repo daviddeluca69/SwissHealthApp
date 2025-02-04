@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.example.swisshealthapp.ui.components.LocalizedText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 /**
  * Composant principal de l'écran de don
@@ -101,6 +103,12 @@ fun DonationScreen() {
                                 delay(2000)
                                 showEmailCopiedMessage = false
                             }
+                        },
+                        modifier = Modifier.semantics {
+                            contentDescription = if (showEmailCopiedMessage) 
+                                "Adresse email copiée dans le presse-papiers" 
+                            else 
+                                "Copier l'adresse email"
                         }
                     ) {
                         LocalizedText(
@@ -136,6 +144,12 @@ fun DonationScreen() {
                                 delay(2000)
                                 showBitcoinCopiedMessage = false
                             }
+                        },
+                        modifier = Modifier.semantics {
+                            contentDescription = if (showBitcoinCopiedMessage) 
+                                "Adresse Bitcoin copiée dans le presse-papiers" 
+                            else 
+                                "Copier l'adresse Bitcoin"
                         }
                     ) {
                         LocalizedText(

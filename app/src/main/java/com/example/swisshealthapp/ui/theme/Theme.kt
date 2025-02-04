@@ -9,7 +9,6 @@ package com.example.swisshealthapp.ui.theme
  * - L'application du thème à l'ensemble de l'application
  */
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -23,36 +22,42 @@ import androidx.compose.ui.graphics.Color
 
 /**
  * Schéma de couleurs pour le thème sombre
- * Utilise les couleurs suisses comme base
+ * Utilise les couleurs suisses comme base avec un contraste amélioré
  */
 private val DarkColorScheme = darkColorScheme(
     primary = SwissRed,
     secondary = SwissRedDark,
     tertiary = SwissRedLight,
-    background = SwissWhite,
+    background = Color(0xFF1C1B1F),
     onPrimary = SwissWhite,
     onSecondary = SwissWhite,
     onTertiary = Color.Black,
-    onBackground = Color(0xFF1C1B1F),
-    surface = Color(0xFFFFFBFF),
-    onSurface = Color(0xFF1C1B1F)
+    onBackground = SwissWhite,
+    surface = Color(0xFF1C1B1F),
+    onSurface = SwissWhite,
+    error = Color(0xFFBA1A1A),
+    onError = SwissWhite
 )
 
 /**
  * Schéma de couleurs pour le thème clair
- * Utilise les mêmes couleurs de base que le thème sombre
+ * Utilise les couleurs suisses avec un contraste amélioré
  */
 private val LightColorScheme = lightColorScheme(
     primary = SwissRed,
     secondary = SwissRedDark,
     tertiary = SwissRedLight,
-    background = SwissWhite,
+    background = Color(0xFFFFFBFF),
     onPrimary = SwissWhite,
     onSecondary = SwissWhite,
     onTertiary = Color.Black,
     onBackground = Color(0xFF1C1B1F),
     surface = Color(0xFFFFFBFF),
-    onSurface = Color(0xFF1C1B1F)
+    onSurface = Color(0xFF1C1B1F),
+    error = Color(0xFFBA1A1A),
+    onError = SwissWhite,
+    surfaceVariant = Color(0xFFF4EFF4),
+    onSurfaceVariant = Color(0xFF49454E)
 )
 
 /**

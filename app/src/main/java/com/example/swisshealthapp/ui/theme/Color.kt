@@ -14,9 +14,9 @@ import androidx.compose.ui.graphics.Color
 /**
  * Rouge suisse officiel (version accessible)
  * Couleur principale de l'application
- * Code hexadécimal : #D40000 (rapport de contraste 5.03:1 avec le blanc)
+ * Code hexadécimal : #9B0000 (rapport de contraste > 4.5:1)
  */
-val SwissRed = Color(0xFFD40000)
+val SwissRed = Color(0xFF9B0000)
 
 /**
  * Blanc suisse officiel
@@ -28,13 +28,13 @@ val SwissWhite = Color(0xFFFFFFFF)
 /**
  * Variante foncée du rouge suisse
  * Utilisée pour les éléments secondaires et les surbrillances
- * Code hexadécimal : #AA0000 (rapport de contraste 6.28:1 avec le blanc)
+ * Code hexadécimal : #800000 (rapport de contraste > 7:1)
  */
-val SwissRedDark = Color(0xFFAA0000)
+val SwissRedDark = Color(0xFF800000)
 
 /**
  * Variante claire du rouge suisse
  * Utilisée pour les éléments tertiaires et les états désactivés
- * Code hexadécimal : #FF6B6B (rapport de contraste 3.1:1 avec le blanc, pour grand texte uniquement)
+ * Code hexadécimal : #D32F2F (rapport de contraste > 4.5:1)
  */
-val SwissRedLight = Color(0xFFFF6B6B)
+val SwissRedLight = Color(0xFFD32F2F)
