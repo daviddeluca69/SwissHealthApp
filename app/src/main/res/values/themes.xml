@@ -8,10 +8,10 @@
     </style>
     
     <style name="ActionBarStyle" parent="android:Widget.Material.Light.ActionBar">
-        <item name="android:titleTextStyle">@style/ActionBarTitleStyle</item>
+        <item name="android:titleTextStyle">@style/ActionBarTitleTextStyle</item>
     </style>
 
-    <style name="ActionBarTitleStyle" parent="android:TextAppearance.Material.Title">
+    <style name="ActionBarTitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
         <item name="android:textSize">20sp</item>
     </style>
     

@@ -38,3 +38,45 @@ val SwissRedDark = Color(0xFF800000)
  * Code hexadécimal : #D32F2F (rapport de contraste > 4.5:1)
  */
 val SwissRedLight = Color(0xFFD32F2F)
+
+/**
+ * Couleur de texte principale
+ * Utilisée pour le texte standard avec un contraste élevé
+ * Code hexadécimal : #1C1B1F (rapport de contraste > 4.5:1 sur fond clair)
+ */
+val TextPrimary = Color(0xFF1C1B1F)
+
+/**
+ * Couleur de fond principale
+ * Utilisée pour les surfaces avec un contraste suffisant
+ * Code hexadécimal : #FFFFFF
+ */
+val BackgroundPrimary = Color(0xFFFFFFFF)
+
+/**
+ * Couleur de texte secondaire
+ * Utilisée pour le texte moins important
+ * Code hexadécimal : #49454F (rapport de contraste > 4.5:1 sur fond clair)
+ */
+val TextSecondary = Color(0xFF49454F)
+
+/**
+ * Couleur de texte pour les champs de saisie
+ * Utilisée pour le texte des EditText avec un contraste optimal
+ * Code hexadécimal : #1D1B20 (rapport de contraste > 4.5:1 sur fond clair)
+ */
+val InputTextColor = Color(0xFF1D1B20)
+
+/**
+ * Couleur de fond pour les champs de saisie
+ * Utilisée pour le fond des EditText
+ * Code hexadécimal : #FFFFFF
+ */
+val InputBackgroundColor = Color(0xFFFFFFFF)
+
+/**
+ * Couleur pour le texte d'indication (placeholder)
+ * Utilisée pour les indications dans les champs de saisie
+ * Code hexadécimal : #49454F (rapport de contraste > 4.5:1)
+ */
+val PlaceholderColor = Color(0xFF49454F)

@@ -36,7 +36,8 @@ private val DarkColorScheme = darkColorScheme(
     surface = Color(0xFF1C1B1F),
     onSurface = SwissWhite,
     error = Color(0xFFBA1A1A),
-    onError = SwissWhite
+    onError = SwissWhite,
+    outline = Color(0xFFCAC4D0)
 )
 
 /**
@@ -47,17 +48,18 @@ private val LightColorScheme = lightColorScheme(
     primary = SwissRed,
     secondary = SwissRedDark,
     tertiary = SwissRedLight,
-    background = Color(0xFFFFFBFF),
+    background = BackgroundPrimary,
     onPrimary = SwissWhite,
     onSecondary = SwissWhite,
     onTertiary = Color.Black,
-    onBackground = Color(0xFF1C1B1F),
-    surface = Color(0xFFFFFBFF),
-    onSurface = Color(0xFF1C1B1F),
+    onBackground = TextPrimary,
+    surface = BackgroundPrimary,
+    onSurface = TextPrimary,
+    surfaceVariant = InputBackgroundColor,
+    onSurfaceVariant = InputTextColor,
     error = Color(0xFFBA1A1A),
     onError = SwissWhite,
-    surfaceVariant = Color(0xFFF4EFF4),
-    onSurfaceVariant = Color(0xFF49454E)
+    outline = PlaceholderColor
 )
 
 /**
