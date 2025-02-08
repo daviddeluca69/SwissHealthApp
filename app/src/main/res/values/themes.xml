@@ -9,10 +9,13 @@
     
     <style name="ActionBarStyle" parent="android:Widget.Material.Light.ActionBar">
         <item name="android:titleTextStyle">@style/ActionBarTitleTextStyle</item>
+        <item name="android:height">56sp</item>
     </style>
 
     <style name="ActionBarTitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
         <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
     </style>
     
     <style name="Theme.SwissHealthApp.Splash" parent="Theme.SplashScreen">

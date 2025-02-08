@@ -15,7 +15,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="Swiss Health Premium"
+            android:label="Swiss Health App"
             android:theme="@style/Theme.SwissHealthApp.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

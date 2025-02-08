@@ -80,3 +80,10 @@ val InputBackgroundColor = Color(0xFFFFFFFF)
  * Code hexadécimal : #49454F (rapport de contraste > 4.5:1)
  */
 val PlaceholderColor = Color(0xFF49454F)
+
+/**
+ * Couleur de texte à contraste élevé
+ * Utilisée pour garantir une excellente lisibilité
+ * Code hexadécimal : #000000 (rapport de contraste > 21:1 sur fond blanc)
+ */
+val HighContrastText = Color(0xFF000000)
