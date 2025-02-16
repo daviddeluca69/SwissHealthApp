@@ -20,6 +20,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swisshealthapp.model.LocalizedStrings
 import com.example.swisshealthapp.viewmodel.LanguageViewModel
+import androidx.compose.ui.graphics.Color
 
 /**
  * Composant pour afficher un texte localisé simple
@@ -27,6 +28,7 @@ import com.example.swisshealthapp.viewmodel.LanguageViewModel
  * @param text Clé de la chaîne à localiser
  * @param modifier Modificateur Compose optionnel
  * @param style Style de texte à appliquer
+ * @param color Couleur du texte
  * @param viewModel ViewModel gérant la langue courante
  */
 @Composable
@@ -34,13 +36,15 @@ fun LocalizedText(
     text: String,
     modifier: Modifier = Modifier,
     style: TextStyle = LocalTextStyle.current,
+    color: Color = Color.Unspecified,
     viewModel: LanguageViewModel = viewModel()
 ) {
     val currentLanguage by viewModel.currentLanguage.collectAsState()
     Text(
         text = LocalizedStrings.get(text, currentLanguage),
         modifier = modifier,
-        style = style
+        style = style,
+        color = color
     )
 }
 

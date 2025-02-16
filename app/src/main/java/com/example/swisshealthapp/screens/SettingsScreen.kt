@@ -230,17 +230,18 @@ fun SettingsScreen(
                     
                     Spacer(modifier = Modifier.height(8.dp))
                     
-                    Text(
-                        text = "La langue sélectionnée sera appliquée à l'ensemble de l'application.",
+                    LocalizedText(
+                        text = "language_info",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        modifier = Modifier.fillMaxWidth()
                     )
                     
                     Spacer(modifier = Modifier.height(8.dp))
                     
-                    Text(
-                        text = "Attention : le changement de langue réinitialisera tous les objectifs à leurs valeurs par défaut dans la nouvelle langue.",
+                    LocalizedText(
+                        text = "language_warning",
                         style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.fillMaxWidth(),
                         color = MaterialTheme.colorScheme.error
                     )
                 }
