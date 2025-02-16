@@ -136,7 +136,7 @@ fun getIconForScreen(screen: Screen): Int {
         Screen.STATS -> R.drawable.ic_stats
         Screen.SETTINGS -> R.drawable.ic_settings
         Screen.RESULTS -> R.drawable.ic_results
-        Screen.DONATION -> R.drawable.ic_donation
+        Screen.DONATION -> R.drawable.ic_more
     }
 }
 

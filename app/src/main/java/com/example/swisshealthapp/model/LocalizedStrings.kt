@@ -34,7 +34,7 @@ object LocalizedStrings {
         "tab_stats" to "Stats",
         "tab_settings" to "Param",
         "tab_results" to "Résultats",
-        "tab_donation" to "Don",
+        "tab_donation" to "Plus",
 
         // Écran des objectifs
         "today" to "Aujourd'hui",
@@ -89,7 +89,12 @@ object LocalizedStrings {
         "donation_bitcoin" to "Don par Bitcoin :",
         "copy_to_clipboard" to "Copier",
         "copied_to_clipboard" to "Copié !",
-        "make_donation" to "Faire un don au développeur"
+        "make_donation" to "Faire un don au développeur",
+
+        // Section Premium
+        "premium_title" to "Passez à la version Premium",
+        "premium_message" to "Découvrez SwissHealth Premium avec des fonctionnalités exclusives :\n\n• Objectifs ET résultats entièrement personnalisables\n• Visualiser vos résultats sur une longue période\n• Un coach santé personnel\n• Des exercices de respiration guidés\n• Des techniques de gestion du stress\n• Et bien plus encore !",
+        "premium_cta" to "Obtenir SwissHealth Premium"
     )
 
     /**
@@ -102,7 +107,7 @@ object LocalizedStrings {
         "tab_stats" to "Statistics",
         "tab_settings" to "Settings",
         "tab_results" to "Results",
-        "tab_donation" to "Donate",
+        "tab_donation" to "More",
 
         // Écran des objectifs
         "today" to "Today",
@@ -157,6 +162,11 @@ object LocalizedStrings {
         "donation_bitcoin" to "Donate with Bitcoin:",
         "copy_to_clipboard" to "Copy",
         "copied_to_clipboard" to "Copied!",
-        "make_donation" to "Support the Developer"
+        "make_donation" to "Support the Developer",
+
+        // Section Premium
+        "premium_title" to "Upgrade to Premium",
+        "premium_message" to "Discover SwissHealth Premium with exclusive features:\n\n• Fully customisable objectives AND results\n• Visualise your results over time\n• Personal health coach\n• Guided breathing exercises\n• Stress management techniques\n• Personalized sleep recommendations\n• And much more!",
+        "premium_cta" to "Get SwissHealth Premium"
     )
 } 
